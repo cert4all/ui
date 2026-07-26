@@ -1,0 +1,115 @@
+/* @cert4all/ui — shell.css
+ *
+ * Estrutura visual do "shell" de login (fundo de página + cartão com
+ * identidade de marca). CSS puro, sem classes utilitárias Tailwind — assim
+ * funciona mesmo em produtos sem Tailwind e não depende do scan de
+ * node_modules do Tailwind v4 (que não inclui pacotes instalados por
+ * padrão). Importe "@cert4all/design-tokens/tokens.css" ANTES deste
+ * arquivo — as variáveis usadas aqui (--background, --card, --primary,
+ * --border, --radius, --destructive, --muted-foreground) vêm de lá.
+ */
+
+.c4a-auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.c4a-auth-card {
+  width: 100%;
+  max-width: 28rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 18px 42px rgba(0, 0, 0, 0.06);
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  overflow: hidden;
+}
+
+.c4a-auth-card__bar {
+  height: 0.5rem;
+  width: 100%;
+  background: hsl(var(--primary));
+}
+
+.c4a-auth-card__header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+}
+
+.c4a-auth-card__logo-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.c4a-auth-card__logo {
+  max-height: 4rem;
+  max-width: 14rem;
+  object-fit: contain;
+}
+
+.c4a-auth-card__avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: calc(var(--radius) - 2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.c4a-auth-card__title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.c4a-auth-card__tagline {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  margin: 0.25rem 0 0;
+}
+
+.c4a-auth-card__body {
+  padding: 0 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.c4a-auth-card__error {
+  border-radius: calc(var(--radius) - 2px);
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.c4a-auth-card__footer {
+  padding: 1rem 2rem 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  border-top: 1px solid hsl(var(--border));
+}
+
+.c4a-auth-page__footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@cert4all/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./shell.css": "./src/shell.css"
+  }
+}
