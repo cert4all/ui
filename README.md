@@ -82,4 +82,6 @@ risco de duas cópias de React coexistindo.
 
 ## Consumidores atuais
 
-- (nenhum ainda — pacote em criação, 2026-07-26)
+- (nenhum publicado ainda — pacote local, consumido via `file:` para
+  desenvolvimento/teste em cert4all, togue, huga e stonen (`apps/web`),
+  2026-07-27. Trocar para `github:cert4all/ui` quando publicado.)
