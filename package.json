@@ -7,6 +7,10 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "react": "^19.2.0"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./shell.css": "./src/shell.css"

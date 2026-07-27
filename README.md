@@ -69,6 +69,17 @@ pra continuar consumível por qualquer stack sem herdar React como
 dependência. Este pacote é uma camada separada por cima, para os produtos
 que efetivamente compartilham React + a mesma estrutura de tela.
 
+## Nota técnica: `react` como devDependency
+
+`react`/`@types/react` estão em `devDependencies` (não `dependencies`) só
+para o TypeScript conseguir resolver os tipos ao desenvolver este pacote
+isoladamente ou ao consumi-lo localmente via `file:` (que gera symlink —
+a resolução de módulos segue o caminho real, fora do `node_modules` do
+consumidor). Por serem `devDependencies`, nenhum consumidor real (via git
+dependency, sem symlink) instala uma cópia própria de `react` — a
+resolução cai naturalmente no `react` do próprio produto consumidor, sem
+risco de duas cópias de React coexistindo.
+
 ## Consumidores atuais
 
 - (nenhum ainda — pacote em criação, 2026-07-26)
