@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+if [[ -x "$REPO_ROOT/scripts/check-large-files.sh" ]]; then
+  if ! "$REPO_ROOT/scripts/check-large-files.sh" --staged; then
+    echo
+    echo "Commit bloqueado: arquivo grande demais no indice (ver acima)."
+    exit 1
+  fi
+fi
+
+if [[ -x "$REPO_ROOT/scripts/check-tracked-paths.sh" ]]; then
+  if ! "$REPO_ROOT/scripts/check-tracked-paths.sh" --staged; then
+    echo
+    echo "Commit bloqueado: caminho de saida no indice (ver acima)."
+    exit 1
+  fi
+fi
+
+if [[ -x "$REPO_ROOT/scripts/check-ai-coordination.sh" ]]; then
+  if ! "$REPO_ROOT/scripts/check-ai-coordination.sh"; then
+    echo
+    echo "Commit bloqueado: estado de coordenacao de IA inconsistente (ver acima)."
+    echo "Regra aplicada: no maximo um agente escritor por working tree (ver AGENTS.md)."
+    echo "Proximo passo: registre/feche um claim em .ai-shared/claims/ e alinhe .ai-shared/current-state.md antes de commitar."
+    exit 1
+  fi
+fi
