@@ -18,6 +18,15 @@
 #   --staged  (padrao)  o que esta no indice agora — usado pelo pre-commit
 #   --tree              o que ja esta em HEAD — usado pelo gate de repositorio,
 #                       porque hook e burlavel com --no-verify
+#   --range A..B        o que os commits do intervalo INTRODUZIRAM na historia,
+#                       mesmo que um commit posterior tenha apagado o arquivo
+#
+# Por que --range existe: --tree so olha a arvore de HEAD, entao adicionar um
+# binario e remove-lo no commit seguinte passa batido. Nao e hipotese — foi
+# exatamente assim que o Cert4All acumulou 4,4 GB: o .gitignore entrou depois,
+# os arquivos sairam da arvore de trabalho, e a historia ficou com tudo. Em
+# 13/08/2026, com 4,4 GB de binarios no historico, o repositorio passava no
+# --tree. Use --range na CI; --tree so como rede de baixo custo.
 
 set -euo pipefail
 
@@ -30,6 +39,7 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MAX_BLOB_BYTES="${MAX_BLOB_BYTES:-10485760}"
 
 MODE="${1:---staged}"
+RANGE="${2:-}"
 
 human() {
   awk -v bytes="$1" 'BEGIN { printf "%.1f MB", bytes / 1048576 }'
@@ -49,6 +59,29 @@ collect_staged() {
   done < <(git -C "$REPO_ROOT" diff --cached --name-only -z --diff-filter=ACMR)
 }
 
+# Validado ANTES de coletar, no shell principal. Dentro de `< <(...)` um `exit`
+# so mata o subshell: o script seguiria com zero caminhos e reportaria "passed".
+# Gate que fica verde por invocacao errada e pior do que gate nenhum.
+validate_range() {
+  [[ -n "$RANGE" ]] || { echo "check-large-files: --range exige um intervalo (ex: origin/main..HEAD)" >&2; exit 2; }
+  git -C "$REPO_ROOT" rev-list --max-count=1 $RANGE > /dev/null 2>&1 \
+    || { echo "check-large-files: intervalo invalido ou refs ausentes: $RANGE" >&2; exit 2; }
+}
+
+collect_range() {
+  local range="$1" type sha size path
+  # rev-list --objects lista os objetos alcancaveis pelo intervalo com o caminho
+  # em que aparecem; e o mesmo caminho que a auditoria usou para achar os blobs.
+  while read -r type sha size path; do
+    [[ "$type" == "blob" ]] || continue
+    [[ -n "$path" ]] || continue
+    if (( size > MAX_BLOB_BYTES )); then
+      offenders+=("$size|$path")
+    fi
+  done < <(git -C "$REPO_ROOT" rev-list --objects $range \
+             | git -C "$REPO_ROOT" cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)')
+}
+
 collect_tree() {
   local record meta path size
   git -C "$REPO_ROOT" rev-parse --verify -q HEAD > /dev/null || return 0
@@ -66,11 +99,17 @@ collect_tree() {
 case "$MODE" in
   --staged) collect_staged ;;
   --tree) collect_tree ;;
+  --range) validate_range; collect_range "$RANGE" ;;
   *)
-    echo "check-large-files: modo desconhecido: $MODE (use --staged ou --tree)" >&2
+    echo "check-large-files: modo desconhecido: $MODE (use --staged, --tree ou --range A..B)" >&2
     exit 2
     ;;
 esac
+
+# Um mesmo blob aparece varias vezes num intervalo (um por commit que o carrega).
+if (( ${#offenders[@]} > 1 )); then
+  IFS=$'\n' read -r -d '' -a offenders < <(printf '%s\n' "${offenders[@]}" | sort -u && printf '\0')
+fi
 
 if (( ${#offenders[@]} == 0 )); then
   echo "Large-file check passed (teto: $(human "$MAX_BLOB_BYTES"), modo: ${MODE#--})."

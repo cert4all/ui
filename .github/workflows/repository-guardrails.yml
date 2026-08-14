@@ -1,0 +1,54 @@
+name: Repository guardrails
+
+# Catracas de binario no servidor. O pre-commit em .githooks/ barra na maquina,
+# mas e burlavel com --no-verify — este gate roda onde --no-verify nao alcanca.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-guardrails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # fetch-depth: 0 — o modo --range percorre os objetos que os commits
+      # introduziram. Num checkout raso o intervalo nao resolve e o script
+      # sai com codigo 2 em vez de passar verde por engano.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Guardrails de binario
+        env:
+          GUARDRAILS_BEFORE: ${{ github.event.before }}
+          # EXCECAO DELIBERADA, unica no portfolio.
+          #
+          # Este repositorio versiona node_modules/ (react, react-dom,
+          # @types/react, scheduler, csstype — 107 arquivos, 8,8 MB) desde o
+          # commit f266253. Nao e descuido: @cert4all/ui e consumido como
+          # "github:cert4all/ui" pelo Cert4All, Huga e Togue, e o `exports`
+          # aponta para ./src/index.ts cru. Sem os tipos versionados, a
+          # resolucao quebra nos tres consumidores.
+          #
+          # A excecao e por prefixo, nao ALLOW_BLOCKED_PATHS=1: uploads/,
+          # storage/, dist/ e as demais classes continuam barradas aqui.
+          #
+          # Para remover esta excecao: publicar o pacote com build (dist/ +
+          # tipos gerados) ou adicionar um `prepare` que instale as
+          # devDependencies no consumo por git. Enquanto isso nao acontecer,
+          # esta linha e a divida registrada.
+          ALLOWED_PATH_EXCEPTIONS: 'node_modules/'
+        run: bash scripts/check-repo-guardrails.sh
