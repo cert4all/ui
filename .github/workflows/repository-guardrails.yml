@@ -2,6 +2,17 @@ name: Repository guardrails
 
 # Catracas de binario no servidor. O pre-commit em .githooks/ barra na maquina,
 # mas e burlavel com --no-verify — este gate roda onde --no-verify nao alcanca.
+#
+# Deliberadamente sem npm, node, build ou dependencia de projeto: e o mesmo
+# arquivo em todos os repositorios do portfolio, e precisa rodar em qualquer um
+# deles sem edicao. A excecao declarada no passo abaixo e a divergencia deste
+# repositorio, com o motivo.
+#
+# Ponto de extensao: se o repositorio tem scripts/gates-dos-hooks.sh, o passo
+# "Gates dos hooks" o roda na main, depois do fato, com a base no commit
+# anterior — para o push que chegou por fora dos hooks do projeto. Sem o script,
+# o passo nao faz nada. O contrato esta em patterns/mechanical-guardrails.md, no
+# ai-project-playbook.
 
 on:
   pull_request:
@@ -12,9 +23,14 @@ on:
 permissions:
   contents: read
 
+# Na main o grupo e o SHA, e nada cancela: o push seguinte audita a partir do
+# proprio `before`, entao o intervalo de uma rodada cancelada nunca mais seria
+# auditado (medido no stonen em 11/09: quatro intervalos passaram sem catraca).
+# Fora da main, como era. So usa o contexto `github` e supoe a `main` como
+# branch padrao.
 concurrency:
-  group: repository-guardrails-${{ github.ref }}
-  cancel-in-progress: true
+  group: repository-guardrails-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   guardrails:
@@ -33,6 +49,8 @@ jobs:
 
       - name: Guardrails de binario
         env:
+          # Em push, delimita o intervalo pelo commit anterior. Em branch nova
+          # vem zerado, e o script audita a historia alcancavel inteira.
           GUARDRAILS_BEFORE: ${{ github.event.before }}
           # EXCECAO DELIBERADA, unica no portfolio.
           #
@@ -52,3 +70,16 @@ jobs:
           # esta linha e a divida registrada.
           ALLOWED_PATH_EXCEPTIONS: 'node_modules/'
         run: bash scripts/check-repo-guardrails.sh
+
+      # Roda mesmo com o passo acima vermelho: os dois conferem coisas
+      # diferentes, e o vermelho de um nao pode esconder o do outro.
+      - name: Gates dos hooks
+        if: ${{ !cancelled() && github.event_name == 'push' }}
+        env:
+          GUARDRAILS_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -f scripts/gates-dos-hooks.sh ]; then
+            bash scripts/gates-dos-hooks.sh "$GUARDRAILS_BEFORE"
+          else
+            echo "Sem scripts/gates-dos-hooks.sh neste repositorio: nada a conferir."
+          fi
