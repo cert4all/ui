@@ -3,7 +3,19 @@ import type { CSSProperties, ReactNode } from "react";
 export interface TenantAuthSplitProps {
   /** Nome da empresa exibido no painel de marca. */
   companyName: string;
+  /** O logo do tenant para superfície CLARA — é o que o resto do app usa. */
   logoUrl?: string | null;
+  /**
+   * A variante do logo para superfície ESCURA. Usada quando o painel fica escuro, que é
+   * decidido pela medida de contraste, não por configuração.
+   *
+   * ⚠️ O nome é `logoOnDark`, e não `darkLogo`, de propósito: "dark logo" pode ser lido como
+   * "o logo de cor escura" — exatamente a ambiguidade que deixou o campo equivalente do banco
+   * (`darkLogoUrl`) parado sem ninguém o desenhar. Aqui o nome diz ONDE ele vai.
+   *
+   * Ausente: cai em `logoUrl`. Um tenant com um logo só continua funcionando como antes.
+   */
+  logoOnDarkUrl?: string | null;
   tagline?: string | null;
   /** Cor de marca do tenant — origem do gradiente do painel. Cada produto define seu fallback. */
   primaryColor?: string | null;
@@ -90,6 +102,7 @@ export function readableInkOn(color: string | null | undefined): string {
 export function TenantAuthSplit({
   companyName,
   logoUrl,
+  logoOnDarkUrl,
   tagline,
   primaryColor,
   error,
@@ -108,6 +121,11 @@ export function TenantAuthSplit({
   // qualquer que seja ela, e o contraste só cresce do topo para o pé.
   const away = ink === INK_LIGHT ? INK_DARK : INK_LIGHT;
 
+  // O logo segue a MESMA medida que a tinta, não uma configuração à parte: se o texto precisa
+  // ser branco, o painel é escuro, e é ali que a variante de fundo escuro serve. Duas decisões
+  // sobre a mesma superfície, tomadas pelo mesmo número, não podem divergir.
+  const logoDoPainel = (ink === INK_LIGHT ? logoOnDarkUrl || logoUrl : logoUrl) || null;
+
   // As variáveis descem por style inline porque a cor nasce do banco, por tenant — não há
   // folha de estilo capaz de conhecê-la de antemão. O CSS as consome com color-mix().
   const asideVars = {
@@ -121,8 +139,8 @@ export function TenantAuthSplit({
       <aside className="c4a-auth-split__brand" style={asideVars}>
         <div className="c4a-auth-split__brand-inner">
           <div className="c4a-auth-split__lockup">
-            {logoUrl ? (
-              <img src={logoUrl} alt={companyName} className="c4a-auth-split__logo" />
+            {logoDoPainel ? (
+              <img src={logoDoPainel} alt={companyName} className="c4a-auth-split__logo" />
             ) : (
               <div className="c4a-auth-split__avatar">{initials(companyName)}</div>
             )}
