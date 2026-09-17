@@ -80,8 +80,64 @@ dependency, sem symlink) instala uma cópia própria de `react` — a
 resolução cai naturalmente no `react` do próprio produto consumidor, sem
 risco de duas cópias de React coexistindo.
 
+## Dois layouts, e o produto escolhe
+
+O pacote expõe **duas** telas de entrada. Elas não se substituem — coexistem, e
+trocar de uma para a outra é trocar o `import`.
+
+| | `TenantAuthCard` | `TenantAuthSplit` |
+|---|---|---|
+| Forma | cartão de 28rem centrado | metade marca, metade formulário |
+| Marca do tenant | barra de 8px no topo | meio ecrã, gradiente da cor dela |
+| Precisa de `AuthPageBackground` | sim, por fora | não, ele já é a página |
+
+`TenantAuthSplit` foi acrescentado em 2026-09-17 (primeiro consumidor: Cert4all).
+`TenantAuthCard` **não** mudou nessa data — Togue, Huga e Stonen continuam com a
+aparência que tinham.
+
+### ⚠️ A tinta do painel é medida, não escolhida
+
+A cor primária vem do cadastro e é a EMPRESA que a escolhe. Ela pode ser clara.
+`TenantAuthSplit` calcula a tinta (`readableInkOn`, exportada) pela razão de
+contraste da WCAG e usa a de maior contraste — branco `#FFFFFF` ou petróleo
+`#10222A`.
+
+Consequência para quem consome: **não pinte texto seu de branco fixo sobre a cor
+do tenant**. Use `readableInkOn(cor)`. O botão de submit do Cert4all dava 1,7:1
+num tenant de marca amarela exatamente por isso.
+
+O gradiente do painel também se afasta da tinta, nunca em direção a ela — um
+gradiente que sempre escurece parece seguro e não é: com tinta escura, escurecer
+o pé do painel derruba o contraste onde fica o bloco de suporte.
+
+Cobertura: `server/tests/login-do-cliente-contraste.test.ts`, no repositório do
+Cert4all — inclui o controle positivo (reprova a implementação de branco fixo).
+
+```tsx
+import { TenantAuthSplit, readableInkOn } from "@cert4all/ui";
+
+<TenantAuthSplit
+  companyName={tenant.companyName}
+  logoUrl={tenant.logoUrl}
+  tagline={tenant.tagline}
+  primaryColor={tenant.primaryColor}
+  formEyebrow="Bem-vindo de volta"
+  formTitle="Acessar o portal"
+  error={error}
+  asideFooter={blocoDeSuporte}
+  pageFooter={<p>© {year} {tenant.companyName}</p>}
+>
+  {/* formulário próprio do produto */}
+</TenantAuthSplit>
+```
+
 ## Consumidores atuais
 
-- (nenhum publicado ainda — pacote local, consumido via `file:` para
-  desenvolvimento/teste em cert4all, togue, huga e stonen (`apps/web`),
-  2026-07-27. Trocar para `github:cert4all/ui` quando publicado.)
+- **Cert4all** — `github:cert4all/ui`. `TenantAuthSplit` em
+  `client/src/pages/TenantLogin.tsx` desde 2026-09-17.
+- **Togue, Huga, Stonen (`apps/web`)** — `TenantAuthCard`, sem alteração.
+
+⚠️ O `package.json` do Cert4all aponta para `github:cert4all/ui` **sem ref**, ou
+seja, para o default branch. Mudança aqui chega nos outros produtos no `npm
+install` seguinte deles — por isso o layout novo é componente NOVO, e não uma
+troca de aparência do `TenantAuthCard`.
