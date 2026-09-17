@@ -43,27 +43,26 @@ function initials(name: string): string {
   return name.trim().slice(0, 2).toUpperCase();
 }
 
-/** #abc | #aabbcc -> [r, g, b] em 0–255. `null` quando a string não é um hex reconhecível. */
+/**
+ * #abc | #aabbcc -> [r, g, b] em 0–255. `null` quando a string não é um hex reconhecível.
+ *
+ * ⚠️ A forma curta é EXPANDIDA para seis antes de qualquer leitura, e a leitura é por
+ * `slice`, nunca por índice. O motivo é de compilação, não de estilo: o consumidor mais
+ * estrito deste pacote (o Stonen) usa `noUncheckedIndexedAccess`, onde `hex[0]` é
+ * `string | undefined` e a versão indexada **não compila**. Um pacote compartilhado precisa
+ * compilar sob o mais estrito dos consumidores — o Cert4All sozinho não pegava isto.
+ */
 function parseHex(value: string): [number, number, number] | null {
   const hex = value.trim().replace(/^#/, "");
+  const largo = hex.length === 3 ? hex.replace(/./g, (c) => c + c) : hex;
 
-  if (/^[0-9a-f]{3}$/i.test(hex)) {
-    return [
-      parseInt(hex[0] + hex[0], 16),
-      parseInt(hex[1] + hex[1], 16),
-      parseInt(hex[2] + hex[2], 16),
-    ];
-  }
+  if (!/^[0-9a-f]{6}$/i.test(largo)) return null;
 
-  if (/^[0-9a-f]{6}$/i.test(hex)) {
-    return [
-      parseInt(hex.slice(0, 2), 16),
-      parseInt(hex.slice(2, 4), 16),
-      parseInt(hex.slice(4, 6), 16),
-    ];
-  }
-
-  return null;
+  return [
+    parseInt(largo.slice(0, 2), 16),
+    parseInt(largo.slice(2, 4), 16),
+    parseInt(largo.slice(4, 6), 16),
+  ];
 }
 
 /** Luminância relativa WCAG 2.x. */
