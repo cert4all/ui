@@ -113,3 +113,219 @@
   font-size: 0.75rem;
   color: hsl(var(--muted-foreground));
 }
+
+/* ---------------------------------------------------------------------------
+ * Split-screen — layout ALTERNATIVO da tela de entrada (TenantAuthSplit).
+ *
+ * Nada aqui redefine as classes `.c4a-auth-page` / `.c4a-auth-card` acima:
+ * os dois layouts coexistem e cada produto escolhe o seu pelo import. Trocar
+ * a aparência de quem não pediu seria mudar Togue, Huga e Stonen de carona.
+ *
+ * `--c4a-brand`, `--c4a-ink` e `--c4a-away` chegam por style inline do
+ * componente (a cor nasce do banco, por tenant, e a tinta é MEDIDA a partir
+ * dela). O resto vem dos tokens, como o cartão.
+ * ------------------------------------------------------------------------- */
+
+.c4a-auth-split {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.c4a-auth-split__brand {
+  /* Cor chapada primeiro: se color-mix() não resolver, o painel continua da
+   * cor da marca em vez de ficar transparente sobre o fundo da página. */
+  background-color: var(--c4a-brand);
+  /* Todo desvio da cor de marca é na direção de `--c4a-away`, o oposto da tinta.
+   * Assim o contraste do painel com o texto nunca cai abaixo do medido na cor
+   * de marca pura — nem no tenant de logo escuro, nem no de logo amarelo. */
+  background-image:
+    radial-gradient(
+      120% 90% at 8% 4%,
+      color-mix(in oklab, var(--c4a-brand), var(--c4a-ink) 10%) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      152deg,
+      var(--c4a-brand) 0%,
+      color-mix(in oklab, var(--c4a-brand), var(--c4a-away) 16%) 42%,
+      color-mix(in oklab, var(--c4a-brand), var(--c4a-away) 46%) 100%
+    );
+  color: var(--c4a-ink);
+  padding: 3rem 2.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Com bloco de apoio, o `margin-top: auto` dele consome a folga e a composição
+ * vira topo-e-rodapé. Sem ele, não há folga para consumir e o `center` centra o
+ * lockup — em vez de o deixar pendurado no topo com meio painel vazio. */
+.c4a-auth-split__brand-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Empilhado por decisão, não por `flex-wrap`: lado a lado, o logotipo fica
+ * refém do comprimento do nome da empresa — e ele varia por tenant. */
+.c4a-auth-split__lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.c4a-auth-split__logo {
+  max-height: 5.5rem;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.c4a-auth-split__avatar {
+  width: 4.5rem;
+  height: 4.5rem;
+  flex: none;
+  border-radius: calc(var(--radius) + 2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--c4a-ink);
+  background: color-mix(in srgb, var(--c4a-away) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c4a-ink) 20%, transparent);
+}
+
+.c4a-auth-split__company {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--c4a-ink);
+  text-wrap: balance;
+}
+
+.c4a-auth-split__tagline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0.375rem 0 0;
+  color: color-mix(in srgb, var(--c4a-ink) 88%, transparent);
+  max-width: 34ch;
+  line-height: 1.5;
+}
+
+.c4a-auth-split__aside-footer {
+  margin-top: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--c4a-ink);
+  background: color-mix(in srgb, var(--c4a-away) 26%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c4a-ink) 18%, transparent);
+  border-radius: calc(var(--radius) + 2px);
+  padding: 1rem 1.125rem;
+  max-width: 26rem;
+}
+
+.c4a-auth-split__aside-footer a {
+  color: var(--c4a-ink);
+  text-decoration: underline;
+}
+
+.c4a-auth-split__form {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2.75rem;
+}
+
+.c4a-auth-split__form-inner {
+  width: 100%;
+  max-width: 23rem;
+}
+
+.c4a-auth-split__eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin: 0 0 0.125rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.c4a-auth-split__title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0 0 1.75rem;
+  text-wrap: balance;
+}
+
+.c4a-auth-split__error {
+  border-radius: calc(var(--radius) - 2px);
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  margin-bottom: 1.25rem;
+}
+
+.c4a-auth-split__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.c4a-auth-split__page-footer {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Abaixo de 64rem o painel deixa de ser metade e vira cabeçalho: lado a lado,
+ * cada coluna ficaria estreita demais para o formulário E para o logotipo. */
+@media (max-width: 64rem) {
+  .c4a-auth-split {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .c4a-auth-split__brand {
+    padding: 2.25rem 1.5rem;
+  }
+
+  .c4a-auth-split__brand-inner {
+    gap: 1.5rem;
+  }
+
+  .c4a-auth-split__logo {
+    max-height: 4rem;
+  }
+
+  .c4a-auth-split__avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.125rem;
+  }
+
+  .c4a-auth-split__company {
+    font-size: 1.375rem;
+  }
+
+  .c4a-auth-split__form {
+    padding: 2.25rem 1.5rem 3rem;
+    align-items: flex-start;
+  }
+}
