@@ -110,6 +110,18 @@ O gradiente do painel também se afasta da tinta, nunca em direção a ela — u
 gradiente que sempre escurece parece seguro e não é: com tinta escura, escurecer
 o pé do painel derruba o contraste onde fica o bloco de suporte.
 
+### E o logo segue a mesma medida
+
+`logoOnDarkUrl` é a variante do logo para superfície **escura**. Quem escolhe
+entre ela e `logoUrl` é a mesma medida de contraste que escolhe a tinta: se o
+texto precisa ser branco, o painel é escuro, e é ali que a variante serve. Sem
+`logoOnDarkUrl`, cai em `logoUrl` — tenant com um logo só continua como antes.
+
+⚠️ **O nome é `logoOnDark`, não `darkLogo`.** "Dark logo" pode ser lido como "o
+logo de cor escura", e foi exatamente essa ambiguidade que deixou o campo
+equivalente do banco (`darkLogoUrl`) parado, resolvido e nunca desenhado. O nome
+da prop diz ONDE o logo vai, não como ele é.
+
 Cobertura: `server/tests/login-do-cliente-contraste.test.ts`, no repositório do
 Cert4all — inclui o controle positivo (reprova a implementação de branco fixo).
 
@@ -120,6 +132,7 @@ import { TenantAuthSplit, readableInkOn } from "@cert4all/ui";
   companyName={tenant.companyName}
   logoUrl={tenant.logoUrl}
   tagline={tenant.tagline}
+  logoOnDarkUrl={tenant.darkLogoUrl}
   primaryColor={tenant.primaryColor}
   formEyebrow="Bem-vindo de volta"
   formTitle="Acessar o portal"
