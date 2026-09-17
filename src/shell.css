@@ -299,7 +299,12 @@
 @media (max-width: 64rem) {
   .c4a-auth-split {
     grid-template-columns: 1fr;
-    min-height: 0;
+    /* ⚠️ A ALTURA CONTINUA CHEIA quando empilhado, e a coluna do formulário é que
+       cresce (`auto 1fr`). Soltar a altura aqui parece inofensivo e não é: num
+       produto que pinta o fundo da página (o Stonen tem uma foto de pedra em
+       `body::before`), o conteúdo termina no meio e o fundo dele aparece por
+       baixo — lê como vazamento, não como desenho. */
+    grid-template-rows: auto 1fr;
   }
 
   .c4a-auth-split__brand {
