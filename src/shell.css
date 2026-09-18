@@ -198,7 +198,12 @@
   para o espaço que tinham de sustentar.
 */
 .c4a-auth-split__logo {
-  max-height: 8rem;
+  /* ⚠️ `height`, NÃO `max-height`. `max-height` LIMITA, não amplia: um SVG com `width`/`height`
+     intrínsecos (o favicon do Cert4All declara 48×48) renderiza no tamanho dele por mais alto que
+     seja o teto. Com `max-height: 8rem` a marca saía com 48px num painel de meia tela, e o defeito
+     só aparecia no produto cujo arquivo tinha dimensão fixa — os outros dois não tinham. */
+  height: 8rem;
+  width: auto;
   max-width: min(100%, 22rem);
   object-fit: contain;
 }
@@ -328,7 +333,7 @@
 
   /* No empilhado o painel é CABEÇALHO, não metade da tela: a escala grande não cabe. */
   .c4a-auth-split__logo {
-    max-height: 4.5rem;
+    height: 4.5rem;
   }
 
   .c4a-auth-split__avatar {
