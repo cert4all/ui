@@ -163,6 +163,40 @@
   overflow: hidden;
 }
 
+/*
+  A MALHA — profundidade sem inventar conteúdo.
+
+  O painel é deliberadamente vazio de texto: promessa de venda numa tela que serve N empresas é
+  filler. Mas meia tela de cor chapada lê como inacabado, e foi o que o owner apontou em 18/09.
+
+  A malha resolve pelo lado certo: é geometria, não mensagem. Feita com a tinta do painel, a 5,5% —
+  perto do limiar do visível. Se ela puder ser LIDA como grade, está forte demais.
+
+  ⚠️ `mask-image` radial a concentra atrás do lockup e a dissolve antes do bloco de apoio: textura
+  atrás de texto pequeno é ruído, e o rodapé do painel é onde mora o contato de suporte.
+
+  ⚠️ `z-index` não entra aqui. O `__brand-inner` já tem `position: relative; z-index: 1`, e este
+  pseudo-elemento fica abaixo dele na ordem de pintura. Acrescentar `z-index: -1` o mandaria para
+  trás do PRÓPRIO painel, e o gradiente o esconderia inteiro.
+*/
+.c4a-auth-split__brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--c4a-ink) 5.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--c4a-ink) 5.5%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(85% 75% at 26% 30%, #000 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(85% 75% at 26% 30%, #000 0%, transparent 78%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Sem animação: a malha é estática de propósito. O bloco existe só para deixar explícito que a
+     ausência é escolha, e não esquecimento de quem vier depois. */
+}
+
 /* Com bloco de apoio, o `margin-top: auto` dele consome a folga e a composição
  * vira topo-e-rodapé. Sem ele, não há folga para consumir e o `center` centra o
  * lockup — em vez de o deixar pendurado no topo com meio painel vazio. */
