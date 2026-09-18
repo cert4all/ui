@@ -204,6 +204,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  text-align: center;
   gap: 2.5rem;
   height: 100%;
   width: 100%;
@@ -211,12 +213,19 @@
   z-index: 1;
 }
 
-/* Empilhado por decisão, não por `flex-wrap`: lado a lado, o logotipo fica
- * refém do comprimento do nome da empresa — e ele varia por tenant. */
+/* ⚠️ CENTRADO, e o alinhamento à esquerda foi um erro meu, corrigido em 18/09.
+ *
+ * Alinhar à esquerda só compõe quando existe uma COLUNA DE CONTEÚDO estabelecendo aquela borda —
+ * é o caso da referência que originou este layout, onde o logotipo e três cartões formam um bloco
+ * e a borda é dele. Aqui o painel é deliberadamente vazio de texto, então o símbolo ficava sozinho
+ * colado na parede: isso não é composição, é falta de composição.
+ *
+ * Enquanto não houver conteúdo à direita do símbolo, ele é centrado. Se um dia houver, o
+ * alinhamento à esquerda volta a fazer sentido — e aí é decisão nova, não volta silenciosa. */
 .c4a-auth-split__lockup {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.75rem;
 }
 
@@ -273,11 +282,14 @@
   margin: 0.375rem 0 0;
   color: color-mix(in srgb, var(--c4a-ink) 88%, transparent);
   max-width: 34ch;
+  margin-inline: auto;
   line-height: 1.5;
 }
 
+/* ⚠️ SEM `margin-top: auto`. Pinado no pé, ele deixava o símbolo sozinho no meio e o texto
+ * sozinho embaixo — dois elementos órfãos em vez de um bloco. Na referência, os cartões ficam
+ * logo abaixo do logotipo, e o conjunto é que é centrado. */
 .c4a-auth-split__aside-footer {
-  margin-top: auto;
   font-size: 0.8125rem;
   line-height: 1.6;
   color: var(--c4a-ink);
@@ -286,6 +298,8 @@
   border-radius: calc(var(--radius) + 2px);
   padding: 1rem 1.125rem;
   max-width: 26rem;
+  margin-inline: auto;
+  text-align: left;
 }
 
 .c4a-auth-split__aside-footer a {
