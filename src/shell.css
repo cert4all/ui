@@ -207,7 +207,12 @@
   align-items: center;
   text-align: center;
   gap: 2.5rem;
-  height: 100%;
+  /* ⚠️ `flex: 1`, e NÃO `height: 100%`. O painel é flex-column e ganhou um segundo filho (a
+   * assinatura do dono): com altura de 100% este bloco ocupava o painel inteiro e empurrava a
+   * assinatura para fora da área visível — `overflow: hidden` no painel a engoliria em silêncio.
+   * `flex: 1` toma o que sobra DEPOIS da assinatura, que é o comportamento que se quer. */
+  flex: 1;
+  min-height: 0;
   width: 100%;
   position: relative;
   z-index: 1;
@@ -305,6 +310,114 @@
 .c4a-auth-split__aside-footer a {
   color: var(--c4a-ink);
   text-decoration: underline;
+}
+
+/*
+  A ASSINATURA DO DONO — procedência, no peso de colofão.
+
+  ⚠️ Ela é PINADA no pé; o bloco de apoio logo acima não é. A diferença é de classe de peso:
+  aquele é conteúdo e, pinado, orfanava o lockup; esta é uma linha de 0.75rem na borda, que é
+  onde um colofão mora em qualquer impresso.
+
+  ⚠️ A tinta é a MEDIDA (`--c4a-ink`) a 62%, não um cinza fixo. Sobre marca clara a tinta é
+  escura e sobre marca escura é clara — um `rgba(255,255,255,.6)` sumiria na metade dos tenants,
+  e sumiria só no dia em que um deles entrasse.
+
+  ⚠️ `position: relative; z-index: 1` porque a malha (`__brand::after`) cobre o painel inteiro.
+  Sem isto ela passaria POR CIMA do texto pequeno — e a máscara radial a dissolve no pé
+  justamente para não fazer isso, mas depender da máscara seria depender de um efeito, não de
+  ordem de pintura.
+*/
+.c4a-auth-split__owner {
+  position: relative;
+  z-index: 1;
+  margin: 1.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--c4a-ink) 74%, transparent);
+}
+
+/*
+  ⚠️ O HOVER NÃO TEM FUNDO, e a razão é de compilação, não de gosto.
+
+  O pipeline do Stonen (lightningcss) REBAIXA `color-mix` e gera um fallback para navegador que
+  não a suporte. Para `color-mix(in srgb, var(--c4a-ink) 9%, transparent)` o fallback que ele
+  escreve é `var(--c4a-ink)` — a cor OPACA. Ou seja: onde a intenção era um véu de 9%, o
+  navegador antigo recebe um bloco sólido de tinta, com texto da MESMA tinta em cima. Some.
+
+  Isso passaria despercebido aqui: o navegador que eu uso para conferir suporta `color-mix`, então
+  o fallback nunca aparece na tela que eu olho. Só apareceu porque li as regras SERVIDAS.
+
+  Com sublinhado e tinta cheia não há fallback a dar errado — o hover é legível nos dois mundos.
+*/
+.c4a-auth-split__owner a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  border-radius: 4px;
+  transition: color 120ms ease;
+}
+
+.c4a-auth-split__owner a:hover,
+.c4a-auth-split__owner a:focus-visible {
+  color: var(--c4a-ink);
+}
+
+/* ⚠️ O sublinhado mora no endereço, e não no `<a>`: no elemento inteiro ele riscaria as DUAS
+   linhas de uma vez, inclusive por baixo do símbolo. */
+.c4a-auth-split__owner a:hover .c4a-auth-split__owner-site,
+.c4a-auth-split__owner a:focus-visible .c4a-auth-split__owner-site {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+/* A primeira linha: produto, ligação, símbolo e nome, lado a lado. */
+.c4a-auth-split__owner-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+}
+
+/*
+  O endereço é a SEGUNDA linha, e mais fraco que o nome de propósito.
+
+  A assinatura existe para dizer de quem é a plataforma; o endereço é onde confirmar isso. Com o
+  mesmo peso do nome, ela viraria uma chamada para SAIR da tela — e a tela é de entrar.
+*/
+.c4a-auth-split__owner-site {
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}
+
+/* O foco tem de aparecer sobre QUALQUER cor de marca — por isso a tinta medida, e não um azul
+   de sistema que some sobre um tenant azul. */
+.c4a-auth-split__owner a:focus-visible {
+  outline: 2px solid var(--c4a-ink);
+  outline-offset: 1px;
+}
+
+/* O nome do dono é o que a linha existe para dizer: ele fica na tinta cheia, o resto atenuado. */
+.c4a-auth-split__owner-name {
+  color: var(--c4a-ink);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.c4a-auth-split__owner-product {
+  font-weight: 600;
+}
+
+.c4a-auth-split__owner-lead {
+  opacity: 0.9;
 }
 
 .c4a-auth-split__form {

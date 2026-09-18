@@ -1,5 +1,70 @@
 import type { CSSProperties, ReactNode } from "react";
 
+/**
+ * A assinatura do dono da plataforma.
+ *
+ * `product` é opcional de propósito: quando o painel já mostra o nome do produto em tamanho
+ * grande — que é o caso do Stonen e do Hugi — repeti-lo aqui embaixo é redundância, e a
+ * assinatura fica só com o lado que falta ("uma plataforma Cert4All").
+ */
+export interface OwnerSignature {
+  /** Nome de quem opera. Ex.: "Cert4All". */
+  owner: string;
+  /** Texto que liga o produto ao dono. Ex.: "uma plataforma", "by". */
+  lead?: string;
+  /** Nome do produto, quando a assinatura nomeia os dois lados ("Stonen by Cert4All"). */
+  product?: string;
+  /** Destino do link. Ausente: a assinatura não é clicável. */
+  href?: string;
+  /**
+   * O endereço, escrito por extenso numa segunda linha (ex.: "cert4all.com.br").
+   *
+   * ⚠️ É TEXTO, e não é derivado de `href`. Derivar pareceria esperto e seria pior: o dia em que o
+   * link virasse `cert4all.com.br/parceiros?ref=stonen`, a linha visível passaria a exibir isso.
+   * Quem escreve o endereço decide o que o cliente lê.
+   */
+  site?: string;
+}
+
+/**
+ * A marca do Cert4All — o numeral 4 como grafo, com o núcleo no cruzamento dos traços.
+ *
+ * ⚠️ Os traços são `currentColor`, e a telha petróleo do favicon NÃO vem junto. É o mesmo
+ * princípio do resto do componente: a assinatura pousa sobre a cor de marca do TENANT, que pode
+ * ser clara ou escura, e uma telha de cor fixa some numa das duas. Herdando a cor, ela usa a
+ * tinta que já foi MEDIDA para aquele painel.
+ *
+ * O núcleo fica menta (`#4FE3C1`) porque é a única cor própria da marca e o que a distingue de um
+ * "4" qualquer. É um ponto de 5px, decorativo — não carrega informação que o contraste precise
+ * garantir.
+ */
+export function Cert4AllMark({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      fill="none"
+      role="presentation"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M30 9 L13 29 M13 29 H39 M30 9 V41"
+        stroke="currentColor"
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="30" cy="9" r="4" fill="currentColor" />
+      <circle cx="13" cy="29" r="4" fill="currentColor" />
+      <circle cx="39" cy="29" r="4" fill="currentColor" />
+      <circle cx="30" cy="41" r="4" fill="currentColor" />
+      <circle cx="30" cy="29" r="5.6" fill="#4FE3C1" />
+    </svg>
+  );
+}
+
 export interface TenantAuthSplitProps {
   /** Nome da empresa exibido no painel de marca. */
   companyName: string;
@@ -27,6 +92,18 @@ export interface TenantAuthSplitProps {
   formEyebrow?: string;
   /** Bloco ao pé do painel de marca (ex.: contato de suporte). */
   asideFooter?: ReactNode;
+  /**
+   * Assinatura de quem OPERA a plataforma, no rodapé do painel de marca.
+   *
+   * Existe porque o painel mostra a marca do produto (Stonen, Hugi) e nada dizia de quem ele é.
+   * Não é `asideFooter`: aquele é um bloco de conteúdo do produto, e este é uma linha de
+   * procedência que precisa ser IGUAL nos três produtos. Prop, e não composição livre, para que
+   * nenhum deles invente a sua e elas divirjam.
+   *
+   * ⚠️ O Cert4All NÃO a passa. "Cert4All, uma plataforma Cert4All" é ruído, e suprimir por prop
+   * ausente é mais honesto que o componente adivinhar comparando strings de nome.
+   */
+  ownerSignature?: OwnerSignature;
   /** Linha ao pé do lado do formulário (ex.: copyright). */
   pageFooter?: ReactNode;
   /** Formulário/botões — inteiramente responsabilidade do produto (campos, SSO, submit). */
@@ -98,6 +175,49 @@ export function readableInkOn(color: string | null | undefined): string {
   return onDark > onLight ? INK_DARK : INK_LIGHT;
 }
 
+
+/**
+ * ⚠️ Esta linha É PINADA no pé, e o bloco de apoio (`asideFooter`) NÃO é — a diferença não é
+ * inconsistência.
+ *
+ * O `asideFooter` é conteúdo (contato de suporte): pinado, ele deixava o símbolo sozinho no meio
+ * e o texto sozinho embaixo, dois órfãos em vez de um bloco. A assinatura é de outra classe de
+ * peso — é colofão, e o pé é o lugar dela em qualquer impresso. Uma linha de 0.75rem na borda não
+ * lê como órfã; lê como rodapé, que é o que ela é.
+ *
+ * ⚠️ E ela tem TEXTO ao lado do símbolo, de propósito. A regra que o owner fixou em 18/09 sobre o
+ * lockup vale aqui: símbolo sozinho encostado numa borda não é composição.
+ */
+function OwnerLine({ signature }: { signature: OwnerSignature }) {
+  const { owner, lead, product, href, site } = signature;
+
+  const conteudo = (
+    <>
+      <span className="c4a-auth-split__owner-line">
+        {product && <span className="c4a-auth-split__owner-product">{product}</span>}
+        {lead && <span className="c4a-auth-split__owner-lead">{lead}</span>}
+        <Cert4AllMark />
+        <span className="c4a-auth-split__owner-name">{owner}</span>
+      </span>
+      {site && <span className="c4a-auth-split__owner-site">{site}</span>}
+    </>
+  );
+
+  if (!href) {
+    return <p className="c4a-auth-split__owner">{conteudo}</p>;
+  }
+
+  // `rel="noreferrer"` junto com `noopener`: a tela de entrada de um cliente não precisa contar ao
+  // site do Cert4All de qual tenant o visitante veio.
+  return (
+    <p className="c4a-auth-split__owner">
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {conteudo}
+      </a>
+    </p>
+  );
+}
+
 export function TenantAuthSplit({
   companyName,
   logoUrl,
@@ -108,6 +228,7 @@ export function TenantAuthSplit({
   formTitle = "Entrar",
   formEyebrow,
   asideFooter,
+  ownerSignature,
   pageFooter,
   children,
 }: TenantAuthSplitProps) {
@@ -151,6 +272,8 @@ export function TenantAuthSplit({
 
           {asideFooter && <div className="c4a-auth-split__aside-footer">{asideFooter}</div>}
         </div>
+
+        {ownerSignature && <OwnerLine signature={ownerSignature} />}
       </aside>
 
       <main className="c4a-auth-split__form">
