@@ -1491,3 +1491,15 @@
   .v2-campos dt { font-size: 11px; }
   .v2-campos dd { margin-top: 0; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* C40 (31/10), pedidos dos agentes do Cert4All:
+   - o botão pequeno que o próprio kit usa ("Limpar filtros") não tinha regra;
+   - no celular as ferramentas da lista quebram linha em vez de estourar a largura;
+   - a grade com um cartão só não mostra o seletor "um cartão por vez". */
+.v2-botao.is-pequeno { min-height: 28px; padding: 0 8px; font-size: 12px; }
+
+@media (max-width: 520px) {
+  .v2-lista-ferramentas { flex-wrap: wrap; justify-content: flex-end; }
+}
+
+.v2-grade:has(> .v2-grade-cartoes > :only-child) > .v2-segmentado.v2-grade-seletor { display: none; }

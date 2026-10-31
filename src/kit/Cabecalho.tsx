@@ -11,7 +11,7 @@ import { Dica } from "./Dica";
   - A ACAO PRIMARIA e uma so e fica sempre a direita, fora do que rola. Secundarias sao subordinadas (botao comum).
   - Explicacao vai no `dica` (o (i)), nunca em paragrafo.
 */
-export function CabecalhoDaTela({ icone, titulo, idDoTitulo, dica, recorte, ferramentas, secundarias, primaria, classe, semTitulo }: {
+export function CabecalhoDaTela({ icone, titulo, idDoTitulo, dica, recorte, ferramentas, secundarias, primaria, classe, semTitulo, testIdDoTitulo }: {
   icone: ReactNode;
   titulo: string;
   idDoTitulo?: string;
@@ -23,10 +23,12 @@ export function CabecalhoDaTela({ icone, titulo, idDoTitulo, dica, recorte, ferr
   classe?: string;
   /** A tela dentro da moldura da v1 (o Cavalete, 20/10): o titulo e o do cabecalho da v1 — um h1 so (ADR-0023). */
   semTitulo?: boolean;
+  /** `data-testid` do título (o `text-page-title` das telas do Cert4All). */
+  testIdDoTitulo?: string;
 }) {
   return <header className={`v2-cartao v2-cabecalho-tela${classe ? ` ${classe}` : ""}`}>
     {!semTitulo && <><span className="v2-icone-objeto" aria-hidden="true">{icone}</span>
-      <h1 {...(idDoTitulo ? { id: idDoTitulo } : {})}>{titulo}</h1></>}
+      <h1 {...(idDoTitulo ? { id: idDoTitulo } : {})} {...(testIdDoTitulo ? { "data-testid": testIdDoTitulo } : {})}>{titulo}</h1></>}
     {dica && <Dica texto={dica} />}
     {recorte && <span className="v2-cabecalho-tela-recorte">{recorte}</span>}
     {(ferramentas || secundarias || primaria) && <span className="v2-cabecalho-tela-acoes">

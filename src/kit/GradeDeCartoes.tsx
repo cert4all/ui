@@ -24,8 +24,8 @@ import { t } from "./textos";
   O cartao aberto no celular e a aba de cada cartao podem ser controlados pela tela (`ativo`/`aoTrocar`,
   `aba`/`aoTrocarAba`) — e assim que um numero da faixa leva ao cartao certo, na aba certa.
 */
-export function PaginaInteira({ rotulo, classe, children }: { rotulo?: string; classe?: string; children: ReactNode }) {
-  return <section className={`v2-pagina is-inteira${classe ? ` ${classe}` : ""}`} {...(rotulo ? { "aria-label": rotulo } : {})}>{children}</section>;
+export function PaginaInteira({ rotulo, classe, testId, children }: { rotulo?: string; classe?: string; testId?: string; children: ReactNode }) {
+  return <section className={`v2-pagina is-inteira${classe ? ` ${classe}` : ""}`} {...(rotulo ? { "aria-label": rotulo } : {})} {...(testId ? { "data-testid": testId } : {})}>{children}</section>;
 }
 
 export type AbaDoCartao = {

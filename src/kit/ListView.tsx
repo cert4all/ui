@@ -69,7 +69,7 @@ const paraBuscar = (texto: string) => texto.normalize("NFD").replace(/\p{M}+/gu,
 
 export function ListView<T>({
   titulo, icone, colunas, linhas, chave, estado = {}, vistas, memoria, vistaPedida, ordemInicial, busca, densidade = true,
-  selecao, abrir, rodape, celular = "rolar", classe, vazio, acoes, avisos, contagem, cargaTotal, limpar
+  selecao, abrir, rodape, celular = "rolar", classe, vazio, acoes, avisos, contagem, cargaTotal, limpar, testId
 }: {
   titulo: string;
   icone?: ReactNode;
@@ -117,6 +117,8 @@ export function ListView<T>({
   cargaTotal?: number;
   /** O "Limpar filtros" do kit (busca e vista sempre; isto cobre o resto). Sem esta prop, nenhum botao aparece. */
   limpar?: { ativo: boolean; aoLimpar: () => void };
+  /** `data-testid` do cartão da lista. */
+  testId?: string;
 }) {
   const [lembrada, lembrar] = useLembrado(memoria ?? null, vistas?.[0]?.id ?? "");
   const [pedida, setPedida] = useState(vistaPedida ?? null);
@@ -207,7 +209,7 @@ export function ListView<T>({
   }, { total: 0, sem: 0, com: 0, ocultas: 0 }) : null;
   if (soma && rodape?.soma?.total) soma.total = rodape.soma.total(visiveis.filter((l) => !rodape.soma!.oculta?.(l) && rodape.soma!.valor(l) !== null));
 
-  return <div className={`v2-cartao v2-lista${celular === "cartoes" ? " is-celular-cartoes" : ""}${classe ? ` ${classe}` : ""}`}>
+  return <div className={`v2-cartao v2-lista${celular === "cartoes" ? " is-celular-cartoes" : ""}${classe ? ` ${classe}` : ""}`} {...(testId ? { "data-testid": testId } : {})}>
     <header className="v2-lista-cabecalho">
       {icone && <span className="v2-icone-objeto" aria-hidden="true">{icone}</span>}
       <div className={`v2-lista-identidade${vistas ? "" : " is-sem-vista"}`}>
