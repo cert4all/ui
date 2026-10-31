@@ -27,3 +27,4 @@ export { PaginaDeCadastro, BlocoDoCadastro, CampoDoCadastro, BlocoDeArquivo } fr
 export { Avatar, iniciaisDe } from "./Avatar";
 export { useEstreito } from "./useEstreito";
 export { Moldura, useMenuDaMoldura, type MenuDaMoldura, type ModuloDaMoldura, type AreaDaMoldura, type ItemDaConta, type PessoaDaMoldura } from "./Moldura";
+export { Interruptor } from "./Interruptor";

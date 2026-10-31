@@ -98,3 +98,25 @@ describe("o menu flutuante (C40)", () => {
     expect(escolher).toHaveBeenCalled();
   });
 });
+
+describe("interruptor e marcadores de aba e vista (C40)", () => {
+  it("o interruptor liga e desliga, com role switch", async () => {
+    const { Interruptor } = await import("./Interruptor");
+    const aoMudar = vi.fn();
+    render(<Interruptor ligado={false} aoMudar={aoMudar} rotulo="SSO ativo" testId="sso" />);
+    const chave = screen.getByRole("switch", { name: "SSO ativo" });
+    expect(chave).toHaveClass("v2-interruptor");
+    fireEvent.click(chave);
+    expect(aoMudar).toHaveBeenCalledWith(true);
+  });
+
+  it("aba de cartão e vista da lista levam testId", async () => {
+    const { GradeDeCartoes } = await import("./GradeDeCartoes");
+    render(<>
+      <GradeDeCartoes rotulo="g" cartoes={[{ id: "m", titulo: "Matriz", abas: [{ id: "l", rotulo: "Licenças", testId: "tab-licencas", conteudo: () => "x" }] }]} />
+      <ListView titulo="Cadastros" linhas={[]} chave={(l: { id: string }) => l.id} colunas={[]} vistas={[{ id: "all", rotulo: "Todos", passa: () => true, testId: "tab-all" }]} />
+    </>);
+    expect(screen.getByTestId("tab-licencas")).toBeInTheDocument();
+    expect(screen.getByTestId("tab-all")).toBeInTheDocument();
+  });
+});

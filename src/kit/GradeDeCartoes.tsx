@@ -33,6 +33,7 @@ export type AbaDoCartao = {
   rotulo: string;
   contador?: ReactNode;
   conteudo: () => ReactNode;
+  testId?: string;
 };
 
 export type CartaoDaGrade = {
@@ -111,7 +112,7 @@ function Cartao({ cartao: c, id, ativo }: { cartao: CartaoDaGrade; id: string; a
     <header className={`v2-grade-cabecalho${c.abas && aba && c.tituloComAbas ? " is-titulado" : ""}`}>
       {c.abas && aba && c.tituloComAbas && <h2>{c.titulo}</h2>}
       {c.abas && aba ? <Segmentado classe="v2-grade-abas" rotulo={t("Seções: {cartao}", { cartao: c.titulo })} ativa={aba.id} aoTrocar={trocarAba}
-        opcoes={c.abas.map((a) => ({ id: a.id, rotulo: a.rotulo, contador: a.contador, controla: `${id}-painel`, idDoBotao: `${id}-aba-${a.id}` }))} />
+        opcoes={c.abas.map((a) => ({ id: a.id, rotulo: a.rotulo, contador: a.contador, controla: `${id}-painel`, idDoBotao: `${id}-aba-${a.id}`, ...(a.testId ? { testId: a.testId } : {}) }))} />
         : <h2>{c.titulo}</h2>}
       {c.dica && <Dica texto={c.dica} />}
       {c.contagem !== undefined && <span className="v2-contador">{c.contagem}</span>}

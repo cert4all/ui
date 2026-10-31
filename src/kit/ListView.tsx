@@ -45,7 +45,7 @@ export type ColunaDaLista<T> = {
   acoes?: boolean;
 };
 
-export type VistaDaLista<T> = { id: string; rotulo: string; passa: (linha: T) => boolean };
+export type VistaDaLista<T> = { id: string; rotulo: string; passa: (linha: T) => boolean; testId?: string };
 
 export type EstadoDaLista = {
   carregando?: boolean;
@@ -225,7 +225,7 @@ export function ListView<T>({
         {vistas && vista && <label className="v2-vista">
           <span className="v2-sr">{t("Vista salva")}</span>
           <select value={vista.id} onChange={(e) => setVistaId(e.target.value)}>
-            {vistas.map((v) => <option key={v.id} value={v.id}>{v.rotulo}</option>)}
+            {vistas.map((v) => <option key={v.id} value={v.id} {...(v.testId ? { "data-testid": v.testId } : {})}>{v.rotulo}</option>)}
           </select>
           <ChevronDown size={16} aria-hidden="true" />
         </label>}
