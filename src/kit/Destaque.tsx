@@ -72,7 +72,7 @@ export type CampoDoDestaque = {
 };
 
 /** O painel de destaque: identidade do registro, os campos que decidem e as acoes a direita. */
-export function Destaque({ icone, tipo, codigo, titulo, idDoTitulo, campos, acoes, rodape }: {
+export function Destaque({ icone, tipo, codigo, titulo, idDoTitulo, campos, acoes, rodape, testIdDoTitulo }: {
   icone: ReactNode;
   /** O tipo do registro ("Oferta", "Cliente", "Bundle"). */
   tipo: string;
@@ -85,13 +85,14 @@ export function Destaque({ icone, tipo, codigo, titulo, idDoTitulo, campos, acoe
   acoes?: ReactNode;
   /** Uma faixa abaixo dos campos, visivel em qualquer aba (as tags do cliente, 12/10). */
   rodape?: ReactNode;
+  testIdDoTitulo?: string;
 }) {
   return <div className="v2-cartao v2-destaque">
     <div className="v2-destaque-topo">
       <span className="v2-icone-objeto" aria-hidden="true">{icone}</span>
       <div className="v2-destaque-titulo">
         <small>{tipo}{codigo && <> <span className="v2-codigo">{codigo}</span></>}</small>
-        <h1 id={idDoTitulo} title={titulo}>{titulo}</h1>
+        <h1 id={idDoTitulo} title={titulo} {...(testIdDoTitulo ? { "data-testid": testIdDoTitulo } : {})}>{titulo}</h1>
       </div>
       {acoes}
     </div>

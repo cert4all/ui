@@ -20,7 +20,7 @@ export type ItemDeMenu = {
   extra?: ReactNode | undefined;
 };
 
-export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao", alinhar = "fim", abrir = "abaixo", desabilitado = false, dica }: {
+export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao", alinhar = "fim", abrir = "abaixo", desabilitado = false, dica, testId }: {
   /** Nome acessivel do botao (ex.: "Mais ações"). */
   rotulo: string;
   itens: ItemDeMenu[];
@@ -33,6 +33,8 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
   desabilitado?: boolean;
   /** O `title` do botao. */
   dica?: string;
+  /** `data-testid` do botao. */
+  testId?: string;
 }) {
   const [aberto, setAberto] = useState(false);
   const botao = useRef<HTMLButtonElement>(null);
@@ -65,7 +67,7 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
   };
 
   return <div className="v2-menu-ancora">
-    <button ref={botao} type="button" className={classeDoBotao} aria-haspopup="menu" aria-expanded={aberto} aria-controls={aberto ? id : undefined}
+    <button ref={botao} type="button" className={classeDoBotao} {...(testId ? { "data-testid": testId } : {})} aria-haspopup="menu" aria-expanded={aberto} aria-controls={aberto ? id : undefined}
       aria-label={conteudoDoBotao ? rotulo : undefined} disabled={desabilitado} title={dica} onClick={() => setAberto((v) => !v)}>
       {conteudoDoBotao ?? <>{rotulo}<ChevronDown size={14} aria-hidden="true" /></>}
     </button>

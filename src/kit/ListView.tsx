@@ -73,7 +73,7 @@ const paraBuscar = (texto: string) => texto.normalize("NFD").replace(/\p{M}+/gu,
 
 export function ListView<T>({
   titulo, icone, colunas, linhas, chave, estado = {}, vistas, memoria, vistaPedida, ordemInicial, busca, densidade = true,
-  selecao, abrir, rodape, celular = "rolar", classe, vazio, acoes, avisos, contagem, cargaTotal, limpar, testId
+  selecao, abrir, rodape, celular = "rolar", classe, vazio, acoes, avisos, contagem, cargaTotal, limpar, testId, testIdDoTitulo
 }: {
   titulo: string;
   icone?: ReactNode;
@@ -125,6 +125,8 @@ export function ListView<T>({
   limpar?: { ativo: boolean; aoLimpar: () => void };
   /** `data-testid` do cartão da lista. */
   testId?: string;
+  /** `data-testid` do título da lista (o `text-page-title` quando a lista é a tela). */
+  testIdDoTitulo?: string;
 }) {
   const [lembrada, lembrar] = useLembrado(memoria ?? null, vistas?.[0]?.id ?? "");
   const [pedida, setPedida] = useState(vistaPedida ?? null);
@@ -219,7 +221,7 @@ export function ListView<T>({
     <header className="v2-lista-cabecalho">
       {icone && <span className="v2-icone-objeto" aria-hidden="true">{icone}</span>}
       <div className={`v2-lista-identidade${vistas ? "" : " is-sem-vista"}`}>
-        <h1>{titulo}</h1>
+        <h1 {...(testIdDoTitulo ? { "data-testid": testIdDoTitulo } : {})}>{titulo}</h1>
         {vistas && vista && <label className="v2-vista">
           <span className="v2-sr">{t("Vista salva")}</span>
           <select value={vista.id} onChange={(e) => setVistaId(e.target.value)}>

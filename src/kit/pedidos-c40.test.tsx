@@ -64,3 +64,20 @@ describe("pedidos da Economia (C40)", () => {
     expect(screen.getByTestId("card-mrr")).toHaveTextContent("MRR");
   });
 });
+
+describe("marcadores do Comercial (C40)", () => {
+  it("cadastro, título da lista, título do registro e botão do menu", async () => {
+    const { Menu } = await import("./Menu");
+    const { Destaque } = await import("./Destaque");
+    render(<>
+      <PaginaDeCadastro icone={null} titulo="Config" trilha={[]} rotuloDaPrimaria="Salvar" aoSalvar={() => undefined} aoCancelar={() => undefined}
+        testIdDaPrimaria="btn-salvar" testIdDoCancelar="btn-voltar"><p>x</p></PaginaDeCadastro>
+      <ListView titulo="Leads" testIdDoTitulo="text-page-title" linhas={[]} chave={(l: { id: string }) => l.id} colunas={[]} />
+      <Destaque icone={null} tipo="Perfil" titulo="Ana" idDoTitulo="t" campos={[]} testIdDoTitulo="text-profile-name" />
+      <Menu rotulo="Mais ações" itens={[]} testId="btn-actions-1" />
+    </>);
+    for (const id of ["btn-salvar", "btn-salvar-topo", "btn-voltar", "btn-voltar-topo", "text-page-title", "text-profile-name", "btn-actions-1"]) {
+      expect(screen.getByTestId(id)).toBeInTheDocument();
+    }
+  });
+});
