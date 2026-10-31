@@ -4,6 +4,7 @@
   continua em cada produto. O produto troca os tokens que quiser na sua propria raiz (`.v2 { --v2-acento: ... }`).
   A fonte (IBM Plex) e do produto: sem ela, `--v2-fonte` cai no Inter e no system-ui.
 */
+.v2 {
   --v2-fundo: #f3f3f3;
   --v2-cartao: #ffffff;
   --v2-borda: #d9dcdf;
