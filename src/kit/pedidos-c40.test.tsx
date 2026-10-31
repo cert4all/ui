@@ -56,3 +56,11 @@ describe("pedidos da C40 ao kit", () => {
     for (const id of ["busca", "editar", "aba-a", "seg-x"]) expect(screen.getByTestId(id)).toBeInTheDocument();
   });
 });
+
+describe("pedidos da Economia (C40)", () => {
+  it("o indicador leva o testId no cartão, mesmo sem valor", async () => {
+    const { PainelDeIndicadores } = await import("./PainelDeIndicadores");
+    render(<PainelDeIndicadores rotulo="Números" indicadores={[{ id: "mrr", rotulo: "MRR", valor: null, testId: "card-mrr" }]} />);
+    expect(screen.getByTestId("card-mrr")).toHaveTextContent("MRR");
+  });
+});

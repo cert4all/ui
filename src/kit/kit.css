@@ -1502,7 +1502,7 @@
    - a grade com um cartão só não mostra o seletor "um cartão por vez". */
 .v2-botao.is-pequeno { min-height: 28px; padding: 0 8px; font-size: 12px; }
 
-@media (max-width: 520px) {
+@media (max-width: 900px) {
   .v2-lista-ferramentas { flex-wrap: wrap; justify-content: flex-end; }
 }
 
@@ -1511,3 +1511,18 @@
 /* O menu do cartão do kanban fica no canto, fora do botão que abre (C40). */
 .v2-kanban-cartao.tem-menu { position: relative; }
 .v2-kanban-menu { position: absolute; top: 4px; right: 4px; }
+
+/* A LISTA COMO ABA DE UM CARTÃO (C40, 31/10, pedido da Economia): uma `ListView` dentro do corpo de um cartão da
+   grade perde a própria moldura (sem cartão dentro de cartão) e ocupa o corpo inteiro; a tabela rola por dentro dela.
+   Assim duas listas viram duas ABAS do mesmo cartão, em vez de duas listas baixas empilhadas. */
+.v2-grade-corpo:has(> .v2-lista:only-child) { display: flex; flex-direction: column; overflow: hidden; }
+.v2-grade-corpo > .v2-lista:only-child {
+  flex: 1 1 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

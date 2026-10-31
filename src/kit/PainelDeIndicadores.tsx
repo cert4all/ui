@@ -21,6 +21,8 @@ export type Indicador = {
   /** A porta: para onde o numero leva, ja filtrado. */
   href?: string;
   aoAbrir?: () => void;
+  /** `data-testid` do cartão do indicador (presente também enquanto o número carrega). */
+  testId?: string;
 };
 
 /*
@@ -40,7 +42,7 @@ export function PainelDeIndicadores({ rotulo, indicadores, faixa = false }: { ro
         e.preventDefault();
         ind.aoAbrir();
       };
-      return <li key={ind.id} className={`v2-cartao v2-indicador${ind.tom ? ` is-${ind.tom}` : ""}`}>
+      return <li key={ind.id} className={`v2-cartao v2-indicador${ind.tom ? ` is-${ind.tom}` : ""}`} {...(ind.testId ? { "data-testid": ind.testId } : {})}>
         {ind.href ? <a href={ind.href} onClick={seguir}>{conteudo}</a>
           : ind.aoAbrir ? <button type="button" onClick={ind.aoAbrir}>{conteudo}</button>
             : <div>{conteudo}</div>}
