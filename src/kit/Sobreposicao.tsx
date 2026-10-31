@@ -26,7 +26,12 @@ function useSobreposicao(aberta: boolean, aoFechar: () => void, retorno: RefObje
     const doCorpo = caixa.current?.querySelector<HTMLElement>("[data-corpo] :is(a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled))");
     (doCorpo ?? focaveis()[0] ?? caixa.current)?.focus();
     const tecla = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { e.preventDefault(); fechar.current(); return; }
+      if (e.key === "Escape") {
+        // Um menu, lista ou popover aberto POR CIMA (Radix/shadcn dentro do corpo) fecha primeiro: o Esc é dele
+        // (C40, 31/10 — o Esc num menu dentro da gaveta fechava a gaveta inteira).
+        if (e.defaultPrevented || document.querySelector('[data-radix-popper-content-wrapper], [role="listbox"][data-state="open"], [role="menu"][data-state="open"]')) return;
+        e.preventDefault(); fechar.current(); return;
+      }
       if (e.key !== "Tab") return;
       const lista = focaveis();
       if (lista.length === 0) { e.preventDefault(); return; }
@@ -46,18 +51,21 @@ type PropsComuns = {
   titulo: string;
   children: ReactNode;
   rodape?: ReactNode;
-  largura?: "estreita" | "larga";
+  /** `extra`: 1200 px no diálogo, 960 px na gaveta (formulário grande, ficha com tabela). */
+  largura?: "estreita" | "larga" | "extra";
+  /** Classe a mais na caixa (a tela ajusta o miolo sem `:has()`). */
+  classe?: string;
   /** O controle que abriu: recebe o foco de volta ao fechar. */
   retorno?: RefObject<HTMLElement | null>;
 };
 
-function Sobreposicao({ tipo, aberta, aoFechar, titulo, children, rodape, largura, retorno }: PropsComuns & { tipo: "dialogo" | "gaveta"; aberta: boolean }) {
+function Sobreposicao({ tipo, aberta, aoFechar, titulo, children, rodape, largura, retorno, classe }: PropsComuns & { tipo: "dialogo" | "gaveta"; aberta: boolean }) {
   const caixa = useSobreposicao(aberta, aoFechar, retorno);
   const id = useId();
   if (!aberta) return null;
   const raiz = document.querySelector(".v2") ?? document.body;
   return createPortal(<div className={`v2-sobreposicao is-${tipo}`} onMouseDown={(e) => { if (e.target === e.currentTarget) aoFechar(); }}>
-    <div ref={caixa} className={`v2-${tipo}${largura ? ` is-${largura}` : ""}`} role="dialog" aria-modal="true" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
+    <div ref={caixa} className={`v2-${tipo}${largura ? ` is-${largura}` : ""}${classe ? ` ${classe}` : ""}`} role="dialog" aria-modal="true" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
       <header>
         <h2 id={`${id}-titulo`}>{titulo}</h2>
         <button type="button" className="v2-botao-icone" aria-label={t("Fechar")} onClick={aoFechar}><X size={16} aria-hidden="true" /></button>

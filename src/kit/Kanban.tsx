@@ -13,7 +13,7 @@ import { t } from "./textos";
 */
 export type ColunaDoKanban = { id: string; rotulo: string; tom?: Tom; dica?: string };
 
-export function Kanban<T>({ rotulo, colunas, itens, colunaDe, chave, tituloDe, cartao, aoAbrir, aoMover, vazioDaColuna = t("Nada nesta etapa.") }: {
+export function Kanban<T>({ rotulo, colunas, itens, colunaDe, chave, tituloDe, cartao, aoAbrir, aoMover, vazioDaColuna = t("Nada nesta etapa."), menu, testIdDe }: {
   /** Nome do quadro para o leitor de tela. */
   rotulo: string;
   colunas: ColunaDoKanban[];
@@ -26,6 +26,10 @@ export function Kanban<T>({ rotulo, colunas, itens, colunaDe, chave, tituloDe, c
   aoAbrir?: (item: T) => void;
   aoMover?: (item: T, paraColuna: string) => void;
   vazioDaColuna?: ReactNode;
+  /** Um menu do cartão, FORA do botão que abre (um botão não pode conter outro). */
+  menu?: (item: T) => ReactNode;
+  /** `data-testid` do cartão. */
+  testIdDe?: (item: T) => string;
 }) {
   const [sobre, setSobre] = useState<string | null>(null);
   const porId = new Map(itens.map((i) => [chave(i), i]));
@@ -51,10 +55,11 @@ export function Kanban<T>({ rotulo, colunas, itens, colunaDe, chave, tituloDe, c
           {daColuna.map((item) => {
             const id = chave(item);
             const titulo = tituloDe(item);
-            return <li key={id} className="v2-kanban-cartao" draggable={Boolean(aoMover)}
+            return <li key={id} className={`v2-kanban-cartao${menu ? " tem-menu" : ""}`} draggable={Boolean(aoMover)} {...(testIdDe ? { "data-testid": testIdDe(item) } : {})}
               onDragStart={aoMover ? (e) => { e.dataTransfer.setData("text/plain", id); e.dataTransfer.effectAllowed = "move"; } : undefined}>
               {aoAbrir ? <button type="button" className="v2-kanban-abrir" aria-label={t("Abrir {titulo}", { titulo })} onClick={() => aoAbrir(item)}>{cartao(item)}</button>
                 : <div className="v2-kanban-conteudo">{cartao(item)}</div>}
+              {menu && <span className="v2-kanban-menu">{menu(item)}</span>}
               {aoMover && <label className="v2-kanban-mover">
                 <span className="v2-sr">{t("Mover {titulo} para", { titulo })}</span>
                 <select value={coluna.id} onChange={(e) => aoMover(item, e.target.value)}>

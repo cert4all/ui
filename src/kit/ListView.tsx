@@ -39,6 +39,10 @@ export type ColunaDaLista<T> = {
   /** `title` da celula — o texto inteiro quando ela corta. */
   dica?: (linha: T) => string | undefined;
   classe?: (linha: T) => string | undefined;
+  /** O texto quebra linha em vez de cortar (célula de duas linhas). */
+  quebra?: boolean;
+  /** Coluna de ações: sem largura máxima, nunca corta os botões. */
+  acoes?: boolean;
 };
 
 export type VistaDaLista<T> = { id: string; rotulo: string; passa: (linha: T) => boolean };
@@ -95,6 +99,8 @@ export function ListView<T>({
     aoMudarTermo?: (termo: string) => void;
     /** `false` esconde o campo (o termo vem de fora). */
     campoVisivel?: boolean;
+    /** `data-testid` do campo. */
+    testId?: string;
   };
   densidade?: boolean;
   selecao?: { selecionada: string | null; aoSelecionar: (linha: T) => void };
@@ -191,7 +197,7 @@ export function ListView<T>({
           } : undefined;
           return <tr key={id} className={[escolhida && "is-selecionada", abrir && "is-abrivel"].filter(Boolean).join(" ") || undefined} onClick={abrirPelaLinha}>
             {colunas.map((c) => <td key={c.id} data-rotulo={c.rotulo} title={c.dica?.(l)}
-              className={[c.numerica && "is-num", c.principal && "is-titulo", c.classe?.(l)].filter(Boolean).join(" ") || undefined}>
+              className={[c.numerica && "is-num", c.principal && "is-titulo", c.quebra && "is-quebra", c.acoes && "is-acoes", c.classe?.(l)].filter(Boolean).join(" ") || undefined}>
               {c.link ? <CelulaLink linha={l} abrir={abrir} selecao={selecao} escolhida={escolhida}>{c.celula(l)}</CelulaLink> : c.celula(l)}
             </td>)}
           </tr>;
@@ -227,7 +233,7 @@ export function ListView<T>({
           <span className="v2-sr">{t("Buscar em {titulo}", { titulo })}</span>
           <Search size={14} aria-hidden="true" />
           <input type="search" value={termo} onChange={(e) => mudarTermo(e.target.value)} placeholder={busca.placeholder ?? t("Buscar nesta lista")}
-            {...(busca.dica ? { title: busca.dica } : {})} />
+            {...(busca.dica ? { title: busca.dica } : {})} {...(busca.testId ? { "data-testid": busca.testId } : {})} />
         </label>}
         {densidade && <button type="button" className="v2-botao-icone v2-densidade" aria-pressed={compacta === "compacta"}
           aria-label={t("Linhas compactas")} title={t("Linhas compactas")} onClick={() => setCompacta(compacta === "compacta" ? "padrao" : "compacta")}>

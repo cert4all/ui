@@ -7,7 +7,7 @@ import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "rea
 
   Controlada (`ativa` + `aoTrocar`) ou nao (`inicial`).
 */
-export type AbaDoRegistro = { id: string; rotulo: string; contador?: ReactNode };
+export type AbaDoRegistro = { id: string; rotulo: string; contador?: ReactNode; testId?: string };
 
 export function Abas({ rotulo, abas, ativa, inicial, aoTrocar, children, classe }: {
   /** Nome do grupo de abas ("Seções da oferta"). */
@@ -38,7 +38,7 @@ export function Abas({ rotulo, abas, ativa, inicial, aoTrocar, children, classe 
 
   return <div className={`v2-cartao v2-registro-abas${classe ? ` ${classe}` : ""}`}>
     <div className="v2-abas-registro" role="tablist" aria-label={rotulo}>
-      {abas.map((a, i) => <button key={a.id} ref={(no) => { botoes.current[a.id] = no; }} id={`${base}-aba-${a.id}`} type="button" role="tab"
+      {abas.map((a, i) => <button key={a.id} ref={(no) => { botoes.current[a.id] = no; }} id={`${base}-aba-${a.id}`} type="button" role="tab" {...(a.testId ? { "data-testid": a.testId } : {})}
         aria-selected={atual === a.id} aria-controls={`${base}-painel`} tabIndex={atual === a.id ? 0 : -1}
         onClick={() => trocar(a.id)} onKeyDown={(e) => tecla(e, i)}>
         {a.rotulo}{a.contador !== undefined && <span className="v2-contador">{a.contador}</span>}

@@ -114,6 +114,7 @@ export type AcaoDoRegistro = {
   /** Botao de liga/desliga (ex.: "Ganha" marcada). */
   pressionada?: boolean;
   tom?: "primaria" | "perigo";
+  testId?: string;
 };
 
 /*
@@ -133,7 +134,7 @@ export function BarraDeAcoes({ acoes, visiveis = 3, rotulo = t("Ações"), erro,
   const dentro = acoes.slice(visiveis);
   return <div className="v2-acoes">
     <div className="v2-grupo-botoes" role="group" aria-label={rotulo}>
-      {fora.map((a) => <button key={a.id} type="button" disabled={a.desabilitada} onClick={a.aoClicar}
+      {fora.map((a) => <button key={a.id} type="button" disabled={a.desabilitada} onClick={a.aoClicar} {...(a.testId ? { "data-testid": a.testId } : {})}
         aria-pressed={a.pressionada === undefined ? undefined : a.pressionada}
         className={`v2-botao${a.tom === "primaria" ? " is-primario" : a.tom === "perigo" ? " is-perigo" : ""}${a.pressionada ? " is-ligado" : ""}`}>
         {a.icone}{a.rotulo}

@@ -22,7 +22,7 @@ import { t } from "./textos";
 */
 export function PaginaDeCadastro({
   icone, titulo, dica, trilha, rotuloDaPrimaria, aoSalvar, aoCancelar, salvando = false, motivo = null, erro = null,
-  rotuloDoCancelar = t("Cancelar"), extraDoRodape, children
+  rotuloDoCancelar = t("Cancelar"), extraDoRodape, cancelarDesabilitado = false, children
 }: {
   icone: ReactNode;
   titulo: string;
@@ -38,6 +38,8 @@ export function PaginaDeCadastro({
   /** O erro geral (o do servidor), no rodape. */
   erro?: string | null;
   rotuloDoCancelar?: string;
+  /** O Cancelar/Voltar sem efeito agora (o primeiro passo de um assistente). */
+  cancelarDesabilitado?: boolean;
   /** Algo a mais no rodape, antes do Cancelar (ex.: "Gravar rascunho"). */
   extraDoRodape?: ReactNode;
   children: ReactNode;
@@ -62,14 +64,14 @@ export function PaginaDeCadastro({
       <h1 id={`${id}-titulo`}>{titulo}</h1>
       {dica && <Dica texto={dica} />}
       <span className="v2-cabecalho-tela-acoes">
-        <button type="button" className="v2-botao" onClick={aoCancelar} disabled={salvando}>{rotuloDoCancelar}</button>
+        <button type="button" className="v2-botao" onClick={aoCancelar} disabled={salvando || cancelarDesabilitado}>{rotuloDoCancelar}</button>
         {primaria("topo")}
       </span>
     </header>
     <form id={`${id}-form`} className="v2-cartao v2-cadastro-painel" aria-labelledby={`${id}-titulo`} onSubmit={enviar} noValidate>
       <div className="v2-cadastro-corpo">{children}</div>
       <footer className="v2-cadastro-rodape">
-        <button type="button" className="v2-botao" onClick={aoCancelar} disabled={salvando}>{rotuloDoCancelar}</button>
+        <button type="button" className="v2-botao" onClick={aoCancelar} disabled={salvando || cancelarDesabilitado}>{rotuloDoCancelar}</button>
         <span className="v2-cadastro-rodape-meio">
           {erro && <p className="v2-erro" role="alert">{erro}</p>}
           {!erro && motivo && <p id={`${id}-motivo`} className="v2-cadastro-motivo">{motivo}</p>}

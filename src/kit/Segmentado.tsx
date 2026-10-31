@@ -16,6 +16,7 @@ export type OpcaoSegmentada = {
   controla?: string;
   /** O `id` do proprio botao, para o painel se rotular por ele (`aria-labelledby`). */
   idDoBotao?: string;
+  testId?: string;
 };
 
 export function Segmentado({ rotulo, opcoes, ativa, aoTrocar, classe }: {
@@ -37,7 +38,7 @@ export function Segmentado({ rotulo, opcoes, ativa, aoTrocar, classe }: {
     botoes.current[proxima.id]?.focus();
   };
   return <div className={`v2-segmentado${classe ? ` ${classe}` : ""}`} role="tablist" aria-label={rotulo}>
-    {opcoes.map((o, i) => <button key={o.id} ref={(no) => { botoes.current[o.id] = no; }} type="button" role="tab"
+    {opcoes.map((o, i) => <button key={o.id} ref={(no) => { botoes.current[o.id] = no; }} type="button" role="tab" {...(o.testId ? { "data-testid": o.testId } : {})}
       id={o.idDoBotao} aria-selected={ativa === o.id} aria-controls={o.controla} tabIndex={ativa === o.id ? 0 : -1}
       onClick={() => aoTrocar(o.id)} onKeyDown={(e) => tecla(e, i)}>
       {o.rotulo}{o.contador !== undefined && <span className="v2-contador">{o.contador}</span>}
