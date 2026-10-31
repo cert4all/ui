@@ -1,0 +1,617 @@
+/*
+  A MOLDURA DA V2 (`Moldura.tsx`): cabecalho, faixa de modulos, barra lateral, busca, avatar e o vidro. Veio do
+  `v2.css` e do `aparencia/aparencia.css` do Stonen (ADR-0069 e emendas) na C40 do Cert4All (31/10).
+*/
+/* ---------- cabecalho global ---------- */
+
+.v2-cabecalho {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto auto auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 52px;
+  padding: 8px 16px;
+  background: var(--v2-cartao);
+  border-bottom: 1px solid var(--v2-borda);
+}
+
+.v2-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.v2-marca strong { font-weight: 700; letter-spacing: 0.02em; }
+
+
+.v2-busca {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 520px);
+}
+
+.v2-busca svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--v2-texto-2);
+}
+
+.v2-busca input {
+  width: 100%;
+  height: 36px;
+  padding: 0 34px 0 34px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+  color: var(--v2-texto);
+  font: inherit;
+}
+
+.v2-extras { display: inline-flex; align-items: center; gap: 8px; }
+
+.v2-org {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+  max-width: 260px;
+  line-height: 1.2;
+}
+
+.v2-org strong,
+.v2-org small {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-org strong { font-weight: 600; }
+.v2-org small { color: var(--v2-texto-2); font-size: 12px; }
+
+.v2-conta { position: relative; }
+
+.v2-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--v2-acento);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.v2-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 2;
+  min-width: 240px;
+  padding: 6px;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+.v2-menu-nome {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px 8px;
+  border-bottom: 1px solid var(--v2-linha);
+  margin-bottom: 4px;
+}
+
+.v2-menu-nome strong { font-weight: 600; }
+.v2-menu-nome small { color: var(--v2-texto-2); font-size: 12px; }
+
+.v2-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--v2-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.v2-menu button:hover { background: var(--v2-acento-claro); }
+
+/* O Zoom no menu da conta (26/10): uma linha com os quatro valores, o atual marcado. */
+.v2-menu .v2-menu-zoom { display: flex; align-items: center; gap: 2px; min-height: 40px; padding: 0 0 0 8px; }
+.v2-menu .v2-menu-zoom > span { display: inline-flex; align-items: center; gap: 8px; margin-right: auto; }
+.v2-menu .v2-menu-zoom button { width: auto; min-height: 32px; padding: 0 8px; font-size: 13px; }
+.v2-menu .v2-menu-zoom button[aria-checked="true"] { background: var(--v2-acento); color: #ffffff; font-weight: 600; }
+
+/* ---------- modulos e subnavegacao (ADR-0069) ---------- */
+
+/* Uma faixa so: os cinco modulos, um divisor e as telas do modulo aberto. No celular rola de lado POR DENTRO. */
+.v2-modulos {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 12px;
+  background: var(--v2-cartao);
+  border-bottom: 1px solid var(--v2-borda);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.v2-modulos ul {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v2-modulos li { flex: 0 0 auto; display: flex; }
+
+.v2-modulos .v2-modulos-sub {
+  position: relative;
+  margin-left: 8px;
+  padding-left: 12px;
+}
+
+/* "Todas as telas": so no celular (abaixo); no desktop a faixa inteira cabe no piso de 1366 px. */
+.v2-modulos .v2-modulos-todas {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--v2-linha);
+  background: transparent;
+  color: var(--v2-acento-escuro);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.v2-modulos .v2-modulos-todas:focus-visible { outline: 2px solid var(--v2-foco); outline-offset: -2px; }
+.v2-todas-as-telas { display: grid; gap: 12px; }
+.v2-todas-as-telas h3 { margin: 0 0 4px; font-size: 13px; color: var(--v2-texto-2); }
+.v2-todas-as-telas ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.v2-todas-as-telas .v2-todas-link {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--v2-texto);
+  text-decoration: none;
+}
+.v2-todas-as-telas .v2-todas-link span { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+.v2-todas-as-telas .v2-todas-link small { color: var(--v2-texto-2); font-size: 12px; }
+.v2-todas-as-telas .v2-todas-link.is-ativa { background: var(--v2-acento-claro); }
+.v2-todas-as-telas .v2-todas-link:focus-visible { outline: 2px solid var(--v2-foco); outline-offset: 1px; }
+
+/* O divisor entre os modulos e as telas do modulo aberto. */
+.v2-modulos-sub::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: var(--v2-borda);
+}
+
+.v2-modulo,
+.v2-submodulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  padding: 0 12px;
+  border-bottom: 3px solid transparent;
+  color: var(--v2-texto);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.v2-modulo { font-weight: 600; }
+.v2-modulo:hover,
+.v2-submodulo:hover { background: var(--v2-fundo); }
+
+.v2-modulo.is-ativo {
+  border-bottom-color: var(--v2-acento);
+  color: var(--v2-acento-escuro);
+}
+
+.v2-submodulo { color: var(--v2-texto-2); }
+
+.v2-submodulo.is-ativa {
+  color: var(--v2-acento-escuro);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--v2-acento);
+}
+
+.v2-submodulo svg { color: var(--v2-texto-2); }
+
+/* ---------- menu lateral ou no topo (emenda de 23/10 da ADR-0069) ---------- */
+
+/* O seletor fica a vista no cabecalho (owner: "a escolha nao pode ficar oculta"). Abaixo de 1600 px, so os icones —
+   o nome continua no title e no leitor de tela. */
+.v2-seletor-menu {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+}
+.v2-seletor-menu button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--v2-texto-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.v2-seletor-menu button:hover { background: var(--v2-acento-claro); color: var(--v2-texto); }
+.v2-seletor-menu button[aria-pressed="true"] { background: var(--v2-acento); color: #ffffff; font-weight: 600; }
+@media (max-width: 1599px) {
+  .v2-seletor-menu button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* O corpo: a lateral (quando escolhida) e o conteudo lado a lado; a altura e a que sobra do cabecalho. */
+.v2-corpo {
+  flex: 1 1 0;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+}
+.v2-corpo > .v2-conteudo { min-width: 0; }
+
+/* No modo lateral a faixa sai (ela continua montada: abaixo de 901 px e ela que vale). */
+@media (min-width: 901px) { .v2[data-menu="lateral"] .v2-modulos { display: none; } }
+
+/* A barra compacta (owner, 23/10: "queria a sidebar mais compacta"): 176 px, itens de 28 px, 13 px de texto — as 18 telas
+   do gerente cabem sem rolar em 1536x680 (o monitor do Lucas). */
+.v2-lateral {
+  flex: 0 0 176px;
+  width: 176px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  padding: 6px;
+  background: var(--v2-cartao);
+  border-right: 1px solid var(--v2-borda);
+}
+.v2-lateral[data-recolhido] { flex-basis: 48px; width: 48px; }
+.v2-lateral-lista {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.v2-lateral h2 {
+  padding: 4px 8px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--v2-texto-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v2-lateral ul { display: grid; margin: 0; padding: 0; list-style: none; }
+.v2-lateral[data-recolhido] section + section { margin-top: 2px; padding-top: 4px; border-top: 1px solid var(--v2-linha); }
+.v2-lateral-link,
+.v2-lateral-recolher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: var(--v2-texto);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.v2-lateral-link > svg { flex: 0 0 auto; }
+.v2-lateral-link > span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.v2-lateral-link:hover { background: var(--v2-acento-claro); }
+.v2-lateral-link.is-ativa { background: var(--v2-acento); color: #ffffff; font-weight: 600; }
+.v2-lateral-recolher {
+  flex: 0 0 auto;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--v2-texto-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.v2-lateral-recolher:hover { background: var(--v2-acento-claro); color: var(--v2-texto); }
+.v2-lateral[data-recolhido] :is(.v2-lateral-link, .v2-lateral-recolher) { justify-content: center; padding: 3px 0; }
+.v2-lateral :is(.v2-lateral-link, .v2-lateral-recolher):focus-visible { outline: 2px solid var(--v2-foco); outline-offset: -2px; }
+
+
+
+/* ---------- busca global (SPEC-0084) ---------- */
+
+.v2-busca-atalho {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 6px;
+  border: 1px solid var(--v2-borda);
+  border-radius: 4px;
+  color: var(--v2-texto-2);
+  font: 500 12px/18px var(--v2-fonte-mono);
+}
+
+.v2-busca input:focus + .v2-busca-atalho { display: none; }
+
+.v2-busca-painel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  max-height: min(70dvh, 520px);
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.14);
+}
+
+.v2-busca-painel ul { margin: 0; padding: 0; list-style: none; }
+
+.v2-busca-estado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+  color: var(--v2-texto-2);
+}
+
+.v2-busca-grupo + .v2-busca-grupo { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--v2-linha); }
+
+.v2-busca-grupo-nome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.v2-busca-grupo-nome span { margin-left: auto; font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+/* O svg da lupa e posicionado pelo `.v2-busca svg`; o icone do grupo fica no fluxo. */
+.v2-busca .v2-busca-grupo-nome svg { position: static; transform: none; }
+
+.v2-busca-opcao {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 8px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.v2-busca-opcao strong,
+.v2-busca-opcao small {
+  grid-column: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-busca-opcao strong { color: var(--v2-acento-escuro); font-weight: 600; }
+.v2-busca-opcao small { color: var(--v2-texto-2); font-size: 12px; }
+.v2-busca-opcao .v2-selo { grid-column: 2; grid-row: 1 / span 2; }
+.v2-busca-opcao.is-todos { color: var(--v2-acento-escuro); font-size: 13px; }
+.v2-busca-opcao.is-ativa { background: var(--v2-acento-claro); }
+
+/* ---------- avatar e perfil ---------- */
+
+.v2-avatar { padding: 0; overflow: hidden; }
+
+/* O "?" da Ajuda (17/10), ao lado do sino: mesmo tamanho de toque do avatar. */
+.v2-avisos { display: inline-flex; align-items: center; gap: 4px; }
+.v2-atalho-ajuda {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--v2-texto-2);
+  cursor: pointer;
+}
+.v2-atalho-ajuda:hover, .v2-atalho-ajuda[aria-current="page"] { background: var(--v2-acento-claro); color: var(--v2-acento-escuro); }
+.v2-atalho-ajuda:focus-visible { outline: 2px solid var(--v2-foco); outline-offset: 2px; }
+
+.v2-avatar-imagem {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.v2-avatar-imagem.is-grande {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  background: var(--v2-acento);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.v2-perfil { display: flex; flex-direction: column; gap: 16px; }
+.v2-perfil-topo { display: flex; align-items: center; gap: 12px; }
+.v2-perfil-topo > span { display: flex; flex-direction: column; min-width: 0; }
+.v2-perfil-topo strong { font-size: 16px; font-weight: 600; }
+.v2-perfil-topo small { color: var(--v2-texto-2); }
+
+.v2-perfil-fatos { display: grid; gap: 8px; margin: 0; }
+.v2-perfil-fatos div { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px; }
+.v2-perfil-fatos dt { color: var(--v2-texto-2); }
+.v2-perfil-fatos dd { margin: 0; font-weight: 500; }
+.v2-perfil-nota { color: var(--v2-texto-2); font-size: 12px; }
+
+
+/* ---------- toque ---------- */
+
+/* Alvo de 44 px no toque (UI_PRINCIPLES §8): o desktop fica denso, o dedo nao erra. */
+@media (pointer: coarse) {
+  .v2-modulo,
+  .v2-submodulo,
+  .v2-avatar,
+  .v2-busca-opcao,
+  .v2-menu button { min-height: 44px; }
+
+  .v2-avatar { min-width: 44px; }
+  .v2-atalho-ajuda { width: 44px; height: 44px; }
+}
+
+
+/* ---------- larguras (moldura) ---------- */
+
+@media (max-width: 480px) {
+  .v2-marca strong { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+@media (max-width: 900px) {
+  .v2-cabecalho {
+    grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+    grid-template-areas: "marca . extras avisos conta" "busca busca busca busca busca";
+    gap: 8px 12px;
+    padding: 8px 12px;
+  }
+
+  .v2-marca { grid-area: marca; }
+  .v2-busca { grid-area: busca; width: 100%; }
+  .v2-org { display: none; }
+  .v2-conta { grid-area: conta; }
+  .v2-avisos { grid-area: avisos; }
+  .v2-extras { grid-area: extras; }
+  .v2-cabecalho > .v2-vazio,
+  .v2-seletor-menu,
+  .v2-lateral { display: none; }
+
+  .v2-modulos { flex-wrap: wrap; gap: 0; padding: 0; overflow: visible; }
+  .v2-modulos ul { flex: 1 0 100%; padding: 0 4px; overflow-x: auto; scrollbar-width: thin; }
+  .v2-modulos .v2-modulos-sub { margin-left: 0; padding-left: 4px; border-top: 1px solid var(--v2-linha); }
+  .v2-modulos-sub::before { display: none; }
+  .v2-modulos .v2-modulos-todas { display: inline-flex; flex: 1 0 100%; }
+  .v2-modulos .v2-modulos-sub[data-continua] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent); }
+  .v2-submodulo { height: 36px; }
+  .v2-busca-atalho { display: none; }
+}
+
+/* ---------- vidro (aparencia do Stonen, 12/10) ---------- */
+/* ---------- a pedra da organizacao ---------- */
+
+/*
+  A pedra mora no `body::before` (mesma camada da v1: a folha do `styles.css` + a foto da organizacao aplicada por
+  `aplicarPapelDeParede`). A raiz da v2 e uma camada fixa por cima; no vidro, ela so deixa de ser opaca.
+*/
+.v2[data-aparencia="vidro"] { background: transparent; }
+
+/* ---------- vidro liquido ---------- */
+
+/*
+  Vidro: superficie translucida que DESFOCA e SATURA o que esta atras (a pedra), borda de luz por dentro (o "liquido"
+  e a luz escorrendo na borda de cima e acumulando embaixo) e um brilho diagonal. Os tokens de cartao ficam
+  translucidos para os paineis de dentro nao virarem retalhos brancos sobre o vidro.
+*/
+.v2[data-aparencia="vidro"] {
+  --v2-cartao: rgb(255 255 255 / 0.5);
+  --v2-borda: rgb(255 255 255 / 0.55);
+  --v2-borda-forte: rgb(255 255 255 / 0.75);
+  --v2-linha: rgb(28 31 35 / 0.09);
+  --v2-cabeca-tabela: rgb(255 255 255 / 0.32);
+  --v2-vidro-filtro: blur(22px) saturate(180%);
+  --v2-vidro-luz:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 -1px 0 rgb(255 255 255 / 0.3),
+    inset 1px 0 0 rgb(255 255 255 / 0.35),
+    inset -1px 0 0 rgb(255 255 255 / 0.2);
+  --v2-vidro-brilho: linear-gradient(135deg, rgb(255 255 255 / 0.42) 0%, rgb(255 255 255 / 0.08) 38%, rgb(255 255 255 / 0) 62%, rgb(255 255 255 / 0.16) 100%);
+}
+
+.v2[data-aparencia="vidro"] :is(.v2-cartao, .v2-estado, .v2-cabecalho, .v2-modulos, .v2-lateral) {
+  background-image: var(--v2-vidro-brilho);
+  -webkit-backdrop-filter: var(--v2-vidro-filtro);
+  backdrop-filter: var(--v2-vidro-filtro);
+  box-shadow: var(--v2-vidro-luz), 0 10px 30px -8px rgb(31 38 50 / 0.22);
+}
+
+.v2[data-aparencia="vidro"] :is(.v2-cartao, .v2-estado) { border-radius: 14px; }
+.v2[data-aparencia="vidro"] .v2-cabecalho { position: relative; z-index: 2; border-bottom-color: rgb(255 255 255 / 0.4); box-shadow: var(--v2-vidro-luz), 0 4px 18px rgb(31 38 50 / 0.12); }
+.v2[data-aparencia="vidro"] .v2-modulos { position: relative; z-index: 1; border-bottom-color: rgb(255 255 255 / 0.4); box-shadow: var(--v2-vidro-luz); }
+.v2[data-aparencia="vidro"] .v2-lateral { position: relative; z-index: 1; border-right-color: rgb(255 255 255 / 0.4); box-shadow: var(--v2-vidro-luz); }
+
+/* O que abre por cima (menus, busca, gaveta, dialogo) e mais opaco: le-se sobre o que esta embaixo. */
+.v2[data-aparencia="vidro"] :is(.v2-menu, .v2-busca-painel, .v2-gaveta, .v2-dialogo) {
+  background-color: rgb(255 255 255 / 0.8);
+  background-image: var(--v2-vidro-brilho);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: var(--v2-vidro-luz), 0 18px 48px rgb(31 38 50 / 0.24);
+}
+
+.v2[data-aparencia="vidro"] :is(.v2-botao, input, select, textarea) { background-color: rgb(255 255 255 / 0.62); }
+.v2[data-aparencia="vidro"] .v2-botao.is-primario { background-color: var(--v2-acento); }
+/*
+  O vidro clareia o fundo de TODO botao; o que tem fundo de cor no kit precisa voltar a ele. Sem isto, o botao de
+  perigo ("Inativar", "Excluir", "Soltar") ficava branco com texto branco — invisivel (bateria de 12/10), e o hover do
+  primario e o "ligado" sumiam. A trava `aparencia-botoes.test.ts` confere contra o kit.
+*/
+.v2[data-aparencia="vidro"] .v2-botao.is-primario:hover:not(:disabled) { background-color: var(--v2-acento-escuro); }
+.v2[data-aparencia="vidro"] .v2-botao.is-perigo { background-color: #a3241a; }
+.v2[data-aparencia="vidro"] .v2-botao.is-ligado { background-color: var(--v2-acento-claro); }
+
+/* Quem pede menos transparencia no sistema recebe o vidro fosco: mesma luz, superficie quase opaca. */
+@media (prefers-reduced-transparency: reduce) {
+  .v2[data-aparencia="vidro"] { --v2-cartao: rgb(255 255 255 / 0.94); }
+  .v2[data-aparencia="vidro"] :is(.v2-cartao, .v2-estado, .v2-cabecalho, .v2-modulos, .v2-lateral) { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

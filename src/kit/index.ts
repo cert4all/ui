@@ -25,3 +25,4 @@ export { PaginaInteira, GradeDeCartoes, type CartaoDaGrade, type AbaDoCartao } f
 export { CabecalhoDaTela } from "./Cabecalho";
 export { PaginaDeCadastro, BlocoDoCadastro, CampoDoCadastro, BlocoDeArquivo } from "./Cadastro";
 export { Avatar, iniciaisDe } from "./Avatar";
+export { Moldura, useMenuDaMoldura, type MenuDaMoldura, type ModuloDaMoldura, type AreaDaMoldura, type ItemDaConta, type PessoaDaMoldura } from "./Moldura";
