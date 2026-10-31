@@ -1526,3 +1526,6 @@
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+
+/* O menu flutuante (portal + posição fixa, `flutuante` no Menu): sobre tudo, fora do contêiner que rola. */
+.v2-menu.is-flutuante { z-index: 40; }

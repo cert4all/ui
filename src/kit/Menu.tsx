@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 
 /*
@@ -20,7 +21,7 @@ export type ItemDeMenu = {
   extra?: ReactNode | undefined;
 };
 
-export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao", alinhar = "fim", abrir = "abaixo", desabilitado = false, dica, testId }: {
+export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao", alinhar = "fim", abrir = "abaixo", desabilitado = false, dica, testId, flutuante = false }: {
   /** Nome acessivel do botao (ex.: "Mais ações"). */
   rotulo: string;
   itens: ItemDeMenu[];
@@ -35,11 +36,18 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
   dica?: string;
   /** `data-testid` do botao. */
   testId?: string;
+  /**
+   * A lista sai do fluxo: portal na raiz `.v2`, posição fixa junto do botão (abre para cima se não couber embaixo).
+   * Para o menu de uma LINHA de tabela ou de um cartão que rola por dentro, onde a lista seria cortada (C40, 31/10).
+   * Rolar ou redimensionar fecha o menu.
+   */
+  flutuante?: boolean;
 }) {
   const [aberto, setAberto] = useState(false);
   const botao = useRef<HTMLButtonElement>(null);
   const caixa = useRef<HTMLDivElement>(null);
   const id = useId();
+  const [posicao, setPosicao] = useState<CSSProperties | null>(null);
 
   const itensFocaveis = () => [...(caixa.current?.querySelectorAll<HTMLButtonElement>("[role=menuitem]:not(:disabled)") ?? [])];
   const fechar = (devolverFoco: boolean) => { setAberto(false); if (devolverFoco) botao.current?.focus(); };
@@ -51,8 +59,32 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
       if (!caixa.current?.contains(e.target as Node) && !botao.current?.contains(e.target as Node)) setAberto(false);
     };
     document.addEventListener("mousedown", fora);
-    return () => document.removeEventListener("mousedown", fora);
-  }, [aberto]);
+    if (!flutuante) return () => document.removeEventListener("mousedown", fora);
+    const sair = (e: Event) => { if (!caixa.current?.contains(e.target as Node)) setAberto(false); };
+    window.addEventListener("scroll", sair, true);
+    window.addEventListener("resize", sair);
+    return () => {
+      document.removeEventListener("mousedown", fora);
+      window.removeEventListener("scroll", sair, true);
+      window.removeEventListener("resize", sair);
+    };
+  }, [aberto, flutuante]);
+
+  const alternar = () => {
+    if (!aberto && flutuante && botao.current) {
+      const r = botao.current.getBoundingClientRect();
+      const embaixo = window.innerHeight - r.bottom;
+      const acima = abrir === "acima" || (embaixo < 240 && r.top > embaixo);
+      setPosicao({
+        position: "fixed",
+        ...(acima ? { bottom: window.innerHeight - r.top + 6 } : { top: r.bottom + 6 }),
+        ...(alinhar === "fim" ? { right: Math.max(8, window.innerWidth - r.right) } : { left: Math.max(8, r.left) }),
+        maxHeight: Math.max(160, (acima ? r.top : embaixo) - 16),
+        overflowY: "auto",
+      });
+    }
+    setAberto((v) => !v);
+  };
 
   const tecla = (e: KeyboardEvent<HTMLDivElement>) => {
     const lista = itensFocaveis();
@@ -66,17 +98,19 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
     else if (e.key === "Tab") fechar(false);
   };
 
-  return <div className="v2-menu-ancora">
-    <button ref={botao} type="button" className={classeDoBotao} {...(testId ? { "data-testid": testId } : {})} aria-haspopup="menu" aria-expanded={aberto} aria-controls={aberto ? id : undefined}
-      aria-label={conteudoDoBotao ? rotulo : undefined} disabled={desabilitado} title={dica} onClick={() => setAberto((v) => !v)}>
-      {conteudoDoBotao ?? <>{rotulo}<ChevronDown size={14} aria-hidden="true" /></>}
-    </button>
-    {aberto && <div ref={caixa} id={id} className={`v2-menu is-${alinhar}${abrir === "acima" ? " is-acima" : ""}`} role="menu" aria-label={rotulo} onKeyDown={tecla}>
+  const lista = <div ref={caixa} id={id} className={`v2-menu is-${alinhar}${abrir === "acima" ? " is-acima" : ""}${flutuante ? " is-flutuante" : ""}`} style={flutuante && posicao ? posicao : undefined} role="menu" aria-label={rotulo} onKeyDown={tecla}>
       {itens.map((item) => <button key={item.id} type="button" role="menuitem" disabled={item.desabilitado}
         className={item.perigo ? "is-perigo" : undefined} aria-current={item.atual ? "page" : undefined}
         onClick={() => { fechar(true); item.aoEscolher(); }}>
         {item.icone}{item.rotulo}{item.extra}
       </button>)}
-    </div>}
+  </div>;
+
+  return <div className="v2-menu-ancora">
+    <button ref={botao} type="button" className={classeDoBotao} {...(testId ? { "data-testid": testId } : {})} aria-haspopup="menu" aria-expanded={aberto} aria-controls={aberto ? id : undefined}
+      aria-label={conteudoDoBotao ? rotulo : undefined} disabled={desabilitado} title={dica} onClick={alternar}>
+      {conteudoDoBotao ?? <>{rotulo}<ChevronDown size={14} aria-hidden="true" /></>}
+    </button>
+    {aberto && (flutuante ? createPortal(lista, document.querySelector(".v2") ?? document.body) : lista)}
   </div>;
 }

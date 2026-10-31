@@ -81,3 +81,20 @@ describe("marcadores do Comercial (C40)", () => {
     }
   });
 });
+
+describe("o menu flutuante (C40)", () => {
+  it("sai do contêiner que rola: a lista vai para a raiz .v2 e escolher chama a ação", async () => {
+    const { Menu } = await import("./Menu");
+    const escolher = vi.fn();
+    render(<div className="v2"><div style={{ overflow: "auto", height: 40 }} data-testid="rola">
+      <Menu rotulo="Ações" flutuante itens={[{ id: "a", rotulo: "Arquivar", aoEscolher: escolher }]} />
+    </div></div>);
+    fireEvent.click(screen.getByRole("button", { name: /Ações/ }));
+    const menu = screen.getByRole("menu");
+    expect(screen.getByTestId("rola").contains(menu)).toBe(false);
+    expect(menu).toHaveClass("is-flutuante");
+    expect(menu.style.position).toBe("fixed");
+    fireEvent.click(within(menu).getByRole("menuitem", { name: "Arquivar" }));
+    expect(escolher).toHaveBeenCalled();
+  });
+});
