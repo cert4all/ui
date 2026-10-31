@@ -22,7 +22,7 @@ import { t } from "./textos";
 */
 export function PaginaDeCadastro({
   icone, titulo, dica, trilha, rotuloDaPrimaria, aoSalvar, aoCancelar, salvando = false, motivo = null, erro = null,
-  rotuloDoCancelar = t("Cancelar"), extraDoRodape, cancelarDesabilitado = false, testIdDaPrimaria, testIdDoCancelar, children
+  rotuloDoCancelar = t("Cancelar"), extraDoRodape, cancelarDesabilitado = false, testIdDaPrimaria, testIdDoCancelar, testIdDoTitulo, children
 }: {
   icone: ReactNode;
   titulo: string;
@@ -43,6 +43,8 @@ export function PaginaDeCadastro({
   /** `data-testid` da primária e do Cancelar (no rodapé; o do topo leva o sufixo `-topo`). */
   testIdDaPrimaria?: string;
   testIdDoCancelar?: string;
+  /** `data-testid` do título (o `text-page-title`). */
+  testIdDoTitulo?: string;
   /** Algo a mais no rodape, antes do Cancelar (ex.: "Gravar rascunho"). */
   extraDoRodape?: ReactNode;
   children: ReactNode;
@@ -65,7 +67,7 @@ export function PaginaDeCadastro({
     </nav>
     <header className="v2-cartao v2-cabecalho-tela">
       <span className="v2-icone-objeto" aria-hidden="true">{icone}</span>
-      <h1 id={`${id}-titulo`}>{titulo}</h1>
+      <h1 id={`${id}-titulo`} {...(testIdDoTitulo ? { "data-testid": testIdDoTitulo } : {})}>{titulo}</h1>
       {dica && <Dica texto={dica} />}
       <span className="v2-cabecalho-tela-acoes">
         <button type="button" className="v2-botao" onClick={aoCancelar} disabled={salvando || cancelarDesabilitado} {...(testIdDoCancelar ? { "data-testid": `${testIdDoCancelar}-topo` } : {})}>{rotuloDoCancelar}</button>

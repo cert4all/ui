@@ -10,6 +10,8 @@ import { ChevronDown } from "lucide-react";
 */
 export type ItemDeMenu = {
   id: string;
+  /** `data-testid` do item. */
+  testId?: string | undefined;
   rotulo: string;
   icone?: ReactNode | undefined;
   aoEscolher: () => void;
@@ -77,8 +79,14 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
       const acima = abrir === "acima" || (embaixo < 240 && r.top > embaixo);
       setPosicao({
         position: "fixed",
-        ...(acima ? { bottom: window.innerHeight - r.top + 6 } : { top: r.bottom + 6 }),
-        ...(alinhar === "fim" ? { right: Math.max(8, window.innerWidth - r.right) } : { left: Math.max(8, r.left) }),
+        // O lado que não ancora vai a "auto": a regra de `.v2-menu` (`top: calc(100% + 6px)`) colapsava a lista
+        // fora da tela quando ela abria para cima (C40, 31/10).
+        ...(acima ? { top: "auto", bottom: window.innerHeight - r.top + 6 } : { top: r.bottom + 6, bottom: "auto" }),
+        // Alinhado ao início, a lista não passa da borda direita (240 px de largura mínima + 8 de margem).
+        ...(alinhar === "fim"
+          ? { right: Math.max(8, window.innerWidth - r.right), left: "auto" }
+          : { left: Math.max(8, Math.min(r.left, window.innerWidth - 248)), right: "auto" }),
+        maxWidth: "calc(100vw - 16px)",
         maxHeight: Math.max(160, (acima ? r.top : embaixo) - 16),
         overflowY: "auto",
       });
@@ -99,7 +107,7 @@ export function Menu({ rotulo, itens, conteudoDoBotao, classeDoBotao = "v2-botao
   };
 
   const lista = <div ref={caixa} id={id} className={`v2-menu is-${alinhar}${abrir === "acima" ? " is-acima" : ""}${flutuante ? " is-flutuante" : ""}`} style={flutuante && posicao ? posicao : undefined} role="menu" aria-label={rotulo} onKeyDown={tecla}>
-      {itens.map((item) => <button key={item.id} type="button" role="menuitem" disabled={item.desabilitado}
+      {itens.map((item) => <button key={item.id} type="button" role="menuitem" disabled={item.desabilitado} {...(item.testId ? { "data-testid": item.testId } : {})}
         className={item.perigo ? "is-perigo" : undefined} aria-current={item.atual ? "page" : undefined}
         onClick={() => { fechar(true); item.aoEscolher(); }}>
         {item.icone}{item.rotulo}{item.extra}

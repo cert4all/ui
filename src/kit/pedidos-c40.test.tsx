@@ -120,3 +120,18 @@ describe("interruptor e marcadores de aba e vista (C40)", () => {
     expect(screen.getByTestId("tab-all")).toBeInTheDocument();
   });
 });
+
+describe("o menu flutuante perto do pé da janela (C40)", () => {
+  it("abre para cima com o top solto, e o item leva testId", async () => {
+    const { Menu } = await import("./Menu");
+    render(<div className="v2"><Menu rotulo="Ações" flutuante itens={[{ id: "a", rotulo: "Aceitar", aoEscolher: () => undefined, testId: "item-aceitar" }]} /></div>);
+    const botao = screen.getByRole("button", { name: /Ações/ });
+    botao.getBoundingClientRect = () => ({ top: 740, bottom: 760, left: 10, right: 90, width: 80, height: 20, x: 10, y: 740, toJSON: () => ({}) });
+    Object.defineProperty(window, "innerHeight", { configurable: true, value: 768 });
+    fireEvent.click(botao);
+    const menu = screen.getByRole("menu");
+    expect(menu.style.top).toBe("auto");
+    expect(menu.style.bottom).not.toBe("");
+    expect(screen.getByTestId("item-aceitar")).toBeInTheDocument();
+  });
+});
