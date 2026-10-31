@@ -568,9 +568,7 @@
   --v2-borda: rgb(255 255 255 / 0.55);
   --v2-borda-forte: rgb(255 255 255 / 0.75);
   --v2-linha: rgb(28 31 35 / 0.09);
-  /* O cabeçalho preso da tabela fica quase opaco: translúcido, as linhas apareciam por baixo dos títulos ao rolar
-     (C40, 31/10: achado em Chamados, Faturamento e Hoje). */
-  --v2-cabeca-tabela: rgb(246 248 248 / 0.94);
+  --v2-cabeca-tabela: rgb(255 255 255 / 0.32);
   --v2-vidro-filtro: blur(22px) saturate(180%);
   --v2-vidro-luz:
     inset 0 1px 0 rgb(255 255 255 / 0.85),
@@ -618,7 +616,16 @@
   .v2[data-aparencia="vidro"] :is(.v2-cartao, .v2-estado, .v2-cabecalho, .v2-modulos, .v2-lateral) { -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
+/*
+  O cabeçalho preso da tabela fica quase opaco no vidro: translúcido, as linhas apareciam por baixo dos títulos ao
+  rolar (C40, 31/10: Chamados, Faturamento, Hoje). O token muda SÓ no `th`: no bloco do vidro ele também pintava a
+  coluna do kanban e os painéis das telas, que perdiam o vidro (achado ao levar a correção ao Stonen).
+*/
 .v2[data-aparencia="vidro"] .v2-tabela thead th {
+  --v2-cabeca-tabela: rgb(246 248 248 / 0.94);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .v2[data-aparencia="vidro"] .v2-tabela thead th { -webkit-backdrop-filter: none; backdrop-filter: none; }
 }

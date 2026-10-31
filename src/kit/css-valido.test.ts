@@ -21,3 +21,15 @@ describe("as folhas do kit", () => {
     });
   }
 });
+
+describe("o cabeçalho da tabela no vidro (C40)", () => {
+  const moldura = readFileSync(new URL("./moldura.css", import.meta.url), "utf8");
+  it("o token quase opaco vale só no th, não no bloco do vidro (o kanban e os painéis mantêm o vidro)", () => {
+    // o bloco dos tokens do vidro é o que define o filtro
+    const inicio = moldura.lastIndexOf('.v2[data-aparencia="vidro"] {', moldura.indexOf("--v2-vidro-filtro:"));
+    const bloco = moldura.slice(inicio, moldura.indexOf("}", inicio));
+    expect(bloco).toMatch(/--v2-cabeca-tabela:\s*rgb\(255 255 255 \/ 0\.32\)/);
+    const th = moldura.slice(moldura.indexOf('.v2[data-aparencia="vidro"] .v2-tabela thead th {'));
+    expect(th.slice(0, th.indexOf("}"))).toMatch(/--v2-cabeca-tabela:\s*rgb\(246 248 248 \/ 0\.94\)/);
+  });
+});
