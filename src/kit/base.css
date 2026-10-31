@@ -1,0 +1,177 @@
+/*
+  A BASE DO KIT (C40 do Cert4All, 31/10): os tokens `--v2-*`, a raiz `.v2` (uma camada fixa do tamanho da janela) e o
+  conteudo que nao rola. Veio do `v2.css` do Stonen (ADR-0065/0069); a moldura (cabecalho, modulos, busca, avatar)
+  continua em cada produto. O produto troca os tokens que quiser na sua propria raiz (`.v2 { --v2-acento: ... }`).
+  A fonte (IBM Plex) e do produto: sem ela, `--v2-fonte` cai no Inter e no system-ui.
+*/
+  --v2-fundo: #f3f3f3;
+  --v2-cartao: #ffffff;
+  --v2-borda: #d9dcdf;
+  --v2-borda-forte: #c4c9ce;
+  --v2-linha: #e7e9eb;
+  --v2-cabeca-tabela: #f7f8f8;
+  --v2-texto: #1c1f23;
+  --v2-texto-2: #545a61;
+  /* O verde da LOGOMARCA (`brand/stonen-mark-color.svg`, #59624E) — owner, 12/10: "esse verde geral de uso do sistema
+     ser o mesmo verde que usamos na logomarca". Antes, petroleo #1d5c63. Contraste: branco sobre ele 6,4:1; ele sobre o
+     claro 5,5:1. */
+  --v2-acento: #59624e;
+  --v2-acento-escuro: #434a3b;
+  --v2-acento-claro: #eceee8;
+  --v2-foco: #59624e;
+  --v2-raio: 8px;
+  --v2-fonte: "IBM Plex Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --v2-fonte-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--v2-fundo);
+  color: var(--v2-texto);
+  font-family: var(--v2-fonte);
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+.v2 *,
+.v2 *::before,
+.v2 *::after { box-sizing: border-box; }
+
+.v2 :focus-visible {
+  outline: 2px solid var(--v2-foco);
+  outline-offset: 2px;
+}
+
+/* Especificidade zero: zera a margem que a folha da v1 da a titulo e paragrafo sem vencer as classes da v2. */
+:where(.v2) h1,
+:where(.v2) h2,
+:where(.v2) p { margin: 0; }
+
+/* A folha da v1 da sombra interna e altura minima a campo e botao; na v2 o campo e desenhado pela propria classe. */
+:where(.v2) :is(input, select, textarea) { box-shadow: none; }
+
+.v2-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.v2-pular {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 3;
+  padding: 8px 12px;
+  border-radius: var(--v2-raio);
+  background: var(--v2-acento);
+  color: #ffffff;
+}
+
+.v2-pular:focus { top: 8px; }
+
+/* ---------- conteudo ---------- */
+
+/*
+  A TELA NAO ROLA (diretiva do owner, 10/10/2026): "As telas nao podem rolar, o conteudo do card pode, a tela nao."
+  A raiz ocupa a janela (fixa, `inset: 0` = 100dvh, inclusive com a barra do navegador do celular); cabecalho e abas
+  sao fixos; o conteudo e uma coluna flex com `min-height: 0`, e a pagina `.is-inteira` (`PaginaInteira` do kit)
+  ocupa exatamente a altura que sobra. Quem rola e o corpo dos cartoes, nunca a pagina.
+
+  O `overflow: auto` daqui NAO e a rolagem da pagina: e a rede de seguranca das telas que ainda nao foram convertidas
+  (a lista de excecoes da trava `tests/e2e/v2-tela-nao-rola.spec.ts`). Sem ela, o que passasse da altura seria cortado
+  sem barra — o defeito oposto, igualmente proibido. A trava reprova toda tela, fora da lista, que role aqui.
+*/
+.v2-conteudo {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+.v2-conteudo > * { flex: 0 0 auto; }
+
+.v2-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 16px 24px;
+}
+
+/* A pagina inteira: exatamente a altura da moldura. Filhos com a altura natural; so os elasticos dividem o resto. */
+.v2-conteudo > .v2-pagina.is-inteira {
+  flex: 1 1 0;
+  min-height: 0;
+  padding-bottom: 12px;
+}
+
+.v2-pagina.is-inteira > * { flex: 0 0 auto; min-width: 0; }
+
+.v2-cartao {
+  min-width: 0;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+}
+
+.v2-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px;
+  padding: 16px;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+}
+
+.v2-icone-objeto {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--v2-acento);
+  color: #ffffff;
+}
+
+.v2-codigo {
+  font-family: var(--v2-fonte-mono);
+  font-weight: 500;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-contador {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--v2-linha);
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.v2-subtitulo {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.v2 .is-ausente { color: var(--v2-texto-2); font-style: italic; }
+
+
+@media (max-width: 900px) {
+  .v2-pagina { padding: 8px 8px 16px; gap: 8px; }
+  .v2-conteudo > .v2-pagina.is-inteira { padding-bottom: 8px; }
+}

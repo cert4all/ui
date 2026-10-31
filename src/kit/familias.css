@@ -1,0 +1,207 @@
+/*
+  AS FAMILIAS DE TELA DA V2 (ADR-0069) — o cabecalho de tela (Cockpit, Mesa), a pagina de cadastro (corpo que rola,
+  rodape fixo, campos em duas colunas, bloco de arquivo) e os estados novos (sucesso, motivo). Separado do `kit.css`
+  pelo teto de tamanho (SPEC-0057, MOD-005); vem no mesmo chunk da v2, importado pelo `V2App` logo depois dele.
+*/
+
+/* Uma linha: icone, titulo, (i), recorte; as acoes a direita (primaria por ultimo). Quebra so se nao couber. */
+.v2-cabecalho-tela {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 52px;
+  padding: 8px 16px;
+}
+
+.v2-cabecalho-tela h1 { font-size: 18px; font-weight: 700; white-space: nowrap; }
+
+.v2-cabecalho-tela-recorte {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--v2-texto-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-cabecalho-tela-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+/* O cadastro: trilha e cabecalho fixos; o painel divide o resto — corpo rola, rodape fica. */
+.v2-cadastro-painel {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.v2-cadastro-corpo {
+  position: relative;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 16px 24px;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+}
+
+.v2-cadastro-rodape {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--v2-borda);
+  background: var(--v2-cartao);
+}
+
+.v2-cadastro-rodape-meio { flex: 1 1 auto; min-width: 0; }
+.v2-cadastro-rodape-meio .v2-erro { margin: 0; }
+.v2-cadastro-motivo,
+.v2-motivo { margin: 0; color: var(--v2-texto-2); font-size: 12px; }
+
+.v2-cadastro-bloco {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.v2-cadastro-bloco.is-largo { grid-column: 1 / -1; }
+
+.v2-cadastro-bloco > legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0 0 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--v2-linha);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.v2-cadastro-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.v2-cadastro-campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.v2-cadastro-campo.is-largo { grid-column: 1 / -1; }
+
+.v2-cadastro-campo > label {
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.v2-obrigatorio { color: #8f2016; }
+
+/* So os campos de texto: o input escondido do `BlocoDeArquivo` (.v2-sr), radio e checkbox ficam no tamanho deles. */
+.v2-cadastro-campo :is(input:not(.v2-sr, [type="radio"], [type="checkbox"]), select, textarea) {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 8px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: 6px;
+  background: var(--v2-cartao);
+  color: var(--v2-texto);
+  font: inherit;
+}
+
+.v2-cadastro-campo [aria-invalid="true"] { border-color: #a3241a; box-shadow: inset 0 0 0 1px #a3241a; }
+.v2-cadastro-campo .v2-campo-erro { margin: 0; }
+.v2-cadastro-ajuda { color: var(--v2-texto-2); font-size: 12px; }
+
+/* O bloco de arquivo: vazio (tracejado, soltar aqui), escolhido, erro e enviando. */
+.v2-arquivo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px dashed var(--v2-borda-forte);
+  border-radius: var(--v2-raio);
+  background: var(--v2-fundo);
+}
+
+.v2-arquivo.is-sobre { border-color: var(--v2-acento); background: var(--v2-acento-claro); }
+.v2-arquivo.is-escolhido,
+.v2-arquivo.is-enviando { border-style: solid; background: var(--v2-cartao); }
+.v2-arquivo.is-erro { border-color: #a3241a; }
+
+.v2-arquivo-rotulo { flex: 1 0 100%; font-weight: 600; }
+.v2-arquivo-soltar { color: var(--v2-texto-2); font-size: 12px; }
+.v2-arquivo .v2-cadastro-ajuda,
+.v2-arquivo .v2-campo-erro { flex: 1 0 100%; margin: 0; }
+
+.v2-arquivo-lista {
+  flex: 1 0 100%;
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v2-arquivo-lista li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.v2-arquivo-lista span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v2-arquivo-lista small { color: var(--v2-texto-2); font-variant-numeric: tabular-nums; }
+
+.v2-arquivo-progresso {
+  position: relative;
+  flex: 1 0 100%;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--v2-linha);
+}
+
+.v2-arquivo-progresso i { position: absolute; inset: 0 auto 0 0; background: var(--v2-acento-claro); }
+.v2-arquivo-progresso span { position: relative; display: block; padding: 0 8px; font-size: 12px; line-height: 24px; }
+
+.v2-estado-area.is-sucesso { color: #1f5f2c; }
+.v2-estado-area.is-sucesso p { display: inline-flex; align-items: center; gap: 6px; }
+
+@media (max-width: 900px) {
+  .v2-cadastro-corpo,
+  .v2-cadastro-campos { grid-template-columns: minmax(0, 1fr); }
+  /* RODAPE COMPACTO NO CELULAR (owner, 12/10, recomendacao da bateria): na Nova campanha ele quebrava em tres linhas
+     (motivo; Cancelar e Gravar rascunho; Ver previa) e comia a area util. As acoes dividem UMA linha (vao 8, recuo 10)
+     e o motivo, quando ha, fica numa linha curta em cima; sem motivo nem erro, o meio vazio nao ocupa linha. Se um
+     idioma nao couber, quebra (nunca corta). */
+  .v2-cadastro-rodape { flex-wrap: wrap; gap: 6px 8px; padding: 6px 12px; }
+  .v2-cadastro-rodape-meio { flex: 1 0 100%; order: -1; }
+  .v2-cadastro-rodape-meio:empty { display: none; }
+  .v2-cadastro-rodape > .v2-botao { padding: 0 10px; }
+  .v2-cadastro-rodape > .v2-botao:last-child { margin-left: auto; }
+  .v2-cabecalho-tela { padding: 8px 12px; }
+  /* No celular o rodape tem as duas acoes; o cabecalho nao as repete. */
+  .v2-cadastro .v2-cabecalho-tela-acoes { display: none; }
+}
+
+@media (pointer: coarse) {
+  /* So os campos de texto: o input escondido do `BlocoDeArquivo` (.v2-sr), radio e checkbox ficam no tamanho deles. */
+.v2-cadastro-campo :is(input:not(.v2-sr, [type="radio"], [type="checkbox"]), select, textarea) { min-height: 44px; }
+}
+

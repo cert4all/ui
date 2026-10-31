@@ -1,0 +1,1493 @@
+/*
+  O CSS DO KIT DA V2 — os componentes de `kit/` (botao, selo, list view, registro, path, abas, atividade, relacionada,
+  secao/campo/formulario, kanban, indicadores, dialogo e gaveta). Carregado junto com `v2.css` pelo chunk lazy da v2;
+  todo seletor comeca em `.v2-` e so vale dentro da raiz `.v2`. CSS de UMA tela nao entra aqui (vai na pasta dela).
+*/
+
+/* ---------- botoes e selos ---------- */
+
+.v2-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+  color: var(--v2-acento-escuro);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.v2-botao:hover:not(:disabled) { background: var(--v2-acento-claro); }
+.v2-botao:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.v2-botao.is-primario {
+  border-color: var(--v2-acento);
+  background: var(--v2-acento);
+  color: #ffffff;
+}
+
+.v2-botao.is-primario:hover:not(:disabled) { background: var(--v2-acento-escuro); }
+
+.v2-botao.is-perigo {
+  border-color: #a3241a;
+  background: #a3241a;
+  color: #ffffff;
+}
+
+.v2-botao.is-ligado {
+  border-color: var(--v2-acento);
+  background: var(--v2-acento-claro);
+}
+
+.v2-botao-icone {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--v2-borda);
+  border-radius: 6px;
+  background: var(--v2-cartao);
+  color: var(--v2-acento-escuro);
+  cursor: pointer;
+}
+
+.v2-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--v2-acento-escuro);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.v2-selo {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.v2-selo.is-neutro { background: #eceef0; color: #3f454c; }
+.v2-selo.is-info { background: #e3eefa; color: #0d4a80; }
+.v2-selo.is-atencao { background: #fbefdc; color: #7a4300; }
+.v2-selo.is-sucesso { background: #e2f3e8; color: #1b5e31; }
+.v2-selo.is-perigo { background: #fbe7e5; color: #8f2016; }
+
+.v2-erro {
+  color: #8f2016;
+  font-weight: 600;
+}
+
+/* ---------- list view ---------- */
+
+.v2-lista-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--v2-linha);
+}
+
+.v2-lista-identidade {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v2-lista-identidade h1 {
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.v2-vista {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.v2-vista select {
+  max-width: 100%;
+  padding: 0 24px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--v2-texto);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  appearance: none;
+  cursor: pointer;
+}
+
+.v2-vista svg {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
+.v2-lista-contagem {
+  margin-left: auto;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+  text-align: right;
+  white-space: nowrap; /* "122 clientes" quebrava em duas linhas com a barra cheia (bateria de 12/10) */
+}
+
+/* A tabela rola DENTRO da propria caixa, nas duas direcoes; o cabecalho das colunas fica (sticky). */
+.v2-tabela-rolagem {
+  overflow: auto;
+}
+
+.v2-tabela thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.v2-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-tabela th {
+  height: 32px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--v2-borda);
+  background: var(--v2-cabeca-tabela);
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.v2-tabela th:first-child,
+.v2-tabela td:first-child { padding-left: 16px; }
+
+.v2-tabela td {
+  height: 36px;
+  max-width: 220px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--v2-linha);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-tabela tbody tr:hover { background: #f9fafa; } .v2-tabela tbody tr.is-abrivel { cursor: pointer; }
+.v2-tabela .is-num { text-align: right; }
+.v2-tabela td.is-titulo { max-width: 340px; }
+
+.v2-tabela a {
+  color: var(--v2-acento-escuro);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.v2-tabela a:hover { text-decoration: underline; }
+
+.v2-ordenar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.v2-tabela.is-compacta td { height: 36px; }
+
+.v2-chapas {
+  display: block;
+  overflow: hidden;
+  color: var(--v2-texto-2);
+  font-family: var(--v2-fonte-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+/* ---------- pagina de registro ---------- */
+
+.v2-trilha {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+}
+
+.v2-trilha a { color: var(--v2-acento-escuro); }
+
+.v2-destaque { padding: 12px 16px; }
+
+.v2-destaque-topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.v2-destaque-topo .v2-icone-objeto {
+  width: 40px;
+  height: 40px;
+}
+
+.v2-destaque-titulo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.v2-destaque-titulo small { color: var(--v2-texto-2); font-size: 12px; }
+
+.v2-destaque-titulo h1 {
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.v2-grupo-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.v2-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 420px);
+  padding: 8px;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-fundo);
+}
+
+.v2-formulario label { font-size: 13px; font-weight: 600; }
+
+.v2-formulario input {
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.v2-formulario div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.v2-lista-de-links { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.v2-lista-de-links li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px; }
+.v2-lista-de-links small { overflow: hidden; color: var(--v2-texto-2); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+
+.v2-campos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--v2-linha);
+}
+
+.v2-campos div { min-width: 0; }
+
+.v2-campos dt {
+  color: var(--v2-texto-2);
+  font-size: 12px;
+}
+
+.v2-campos dd {
+  margin: 2px 0 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* o caminho (path) */
+
+.v2-caminho { padding: 8px; }
+
+.v2-caminho ol {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.v2-caminho li {
+  display: flex;
+  flex: 1 0 104px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 16px;
+  background: #eceef0;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%);
+}
+
+.v2-caminho li:first-child {
+  border-radius: 16px 0 0 16px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+
+.v2-caminho li:last-child {
+  border-radius: 0 16px 16px 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10px 50%);
+}
+
+.v2-caminho li.is-feito { background: var(--v2-acento-claro); color: var(--v2-acento-escuro); }
+.v2-caminho li.is-atual { background: var(--v2-acento); color: #ffffff; }
+.v2-caminho li.is-final-ruim { background: #fbe7e5; color: #8f2016; }
+.v2-caminho.is-fechado li:not(.is-final-ruim) { opacity: 0.6; }
+
+.v2-caminho-nota {
+  padding: 6px 4px 0;
+  color: var(--v2-texto-2);
+  font-size: 12px;
+}
+
+.v2-registro-corpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px;
+}
+
+.v2-abas-registro {
+  display: flex;
+  gap: 4px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--v2-linha);
+  overflow-x: auto;
+}
+
+.v2-abas-registro button {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--v2-texto);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.v2-abas-registro button[aria-selected="true"] {
+  border-bottom-color: var(--v2-acento);
+  color: var(--v2-acento-escuro);
+  font-weight: 600;
+}
+
+.v2-painel { padding-bottom: 8px; }
+
+.v2-detalhes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 0;
+  padding: 8px 16px;
+}
+
+.v2-detalhes div {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--v2-linha);
+}
+
+.v2-detalhes dt { color: var(--v2-texto-2); font-size: 12px; }
+.v2-detalhes dd { margin: 2px 0 0; overflow-wrap: anywhere; }
+
+.v2-mensagem {
+  margin: 0 16px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--v2-acento-claro);
+  white-space: pre-wrap;
+}
+
+/* a atividade */
+
+.v2-atividade { padding-bottom: 8px; }
+
+.v2-linha-do-tempo {
+  margin: 0;
+  padding: 0 16px;
+  list-style: none;
+}
+
+.v2-linha-do-tempo li {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 0 0 12px;
+}
+
+.v2-linha-do-tempo li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 14px;
+  bottom: 0;
+  width: 2px;
+  background: var(--v2-linha);
+}
+
+.v2-ponto {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #8b929a;
+}
+
+.v2-linha-do-tempo .is-info .v2-ponto { background: #1f6fb8; }
+.v2-linha-do-tempo .is-atencao .v2-ponto { background: #b26a00; }
+.v2-linha-do-tempo .is-sucesso .v2-ponto { background: #23824a; }
+.v2-linha-do-tempo .is-perigo .v2-ponto { background: #b3271c; }
+
+.v2-linha-do-tempo div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v2-linha-do-tempo strong { font-weight: 600; }
+
+.v2-linha-do-tempo span {
+  overflow: hidden;
+  color: var(--v2-texto-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v2-linha-do-tempo time { color: var(--v2-texto-2); font-size: 12px; }
+
+/* ---------- (i), estados, menu ---------- */
+
+/*
+  O (i) DA V1 EMBUTIDA (`InfoTip`, `.info-tip`): o balao dele e um `::after` sempre presente, so transparente — numa
+  caixa de altura fixa ele conta como conteudo e a caixa "corta" (ou rola) um balao invisivel. Na v2 ele so existe
+  enquanto aparece, como o `Dica` da v2.
+*/
+.v2 .info-tip:not(:hover):not(:focus-visible)::after { display: none; }
+
+.v2-dica {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  border-radius: 50%;
+  color: var(--v2-texto-2);
+  vertical-align: middle;
+  cursor: help;
+}
+
+.v2-dica:hover,
+.v2-dica:focus-visible { color: var(--v2-acento-escuro); }
+
+.v2-dica:hover::after,
+.v2-dica:focus-visible::after {
+  content: attr(data-dica);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  z-index: 4;
+  width: max-content;
+  max-width: 280px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--v2-texto);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
+  transform: translateX(-50%);
+}
+
+/* Na barra da lista o (i) e o ultimo a direita: o balao centrado vazava a janela (Reservas, 1366 e 390). Ancora a direita. */
+.v2-lista-ferramentas .v2-dica:hover::after,
+.v2-lista-ferramentas .v2-dica:focus-visible::after { left: auto; right: 0; transform: none; }
+
+.v2-estado-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  color: var(--v2-texto-2);
+}
+
+.v2-estado-area.is-erro { color: #8f2016; }
+
+.v2-menu-ancora { position: relative; }
+.v2-menu.is-fim { right: 0; }
+.v2-menu.is-inicio { left: 0; }
+.v2-menu.is-acima { top: auto; bottom: calc(100% + 6px); }
+.v2-menu button[aria-current="page"] { color: var(--v2-acento-escuro); font-weight: 600; }
+.v2-menu button.is-perigo { color: #8f2016; }
+.v2-menu button:disabled { opacity: 0.55; cursor: not-allowed; }
+.v2-menu button svg:last-of-type:not(:first-child) { color: var(--v2-texto-2); }
+
+.v2-icone-objeto.is-pequeno {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+/* ---------- list view: ferramentas, selecao, rodape ---------- */
+
+.v2-lista-identidade.is-sem-vista h1 {
+  color: var(--v2-texto);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.v2-lista-ferramentas {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.v2-lista-busca {
+  position: relative;
+  display: block;
+}
+
+.v2-lista-busca svg {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--v2-texto-2);
+}
+
+.v2-lista-busca input {
+  width: 220px;
+  height: 32px;
+  padding: 0 8px 0 28px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.v2-botao-icone[aria-pressed="true"] {
+  border-color: var(--v2-acento);
+  background: var(--v2-acento-claro);
+}
+
+.v2-lista-ferramentas + .v2-lista-contagem { margin-left: 0; }
+
+.v2-tabela-rolagem:focus-visible { outline-offset: -2px; }
+
+.v2-tabela tbody tr.is-selecionada { background: var(--v2-acento-claro); }
+.v2-tabela tbody tr.is-selecionada td:first-child { box-shadow: inset 3px 0 0 var(--v2-acento); }
+
+.v2-celula-botao {
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--v2-acento-escuro);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.v2-lista-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-lista-rodape strong { color: var(--v2-texto); font-weight: 600; }
+
+/* ---------- registro: trilha, relacionada ---------- */
+
+/* A linha da trilha com anterior / proximo na ponta direita (ficha do bundle, owner 27/10). */
+.v2-trilha-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.v2-trilha-linha > .v2-trilha { min-width: 0; flex-wrap: wrap; }
+
+.v2-passos {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+}
+
+.v2-passos-vazio { width: 32px; height: 32px; }
+
+.v2-trilha-nivel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.v2-registro-corpo.is-sem-lateral { grid-template-columns: minmax(0, 1fr); }
+
+.v2-atividade-dia h3 {
+  margin: 0;
+  padding: 4px 16px 6px;
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.v2-relacionada + .v2-relacionada { border-top: 1px solid var(--v2-linha); }
+
+.v2-relacionada > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px 8px;
+}
+
+.v2-relacionada h2 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.v2-relacionada .v2-contador { margin-left: 0; }
+
+.v2-relacionada-todos {
+  margin-left: auto;
+  color: var(--v2-acento-escuro);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------- secao, campo, formulario ---------- */
+
+.v2-secao + .v2-secao { border-top: 1px solid var(--v2-linha); }
+
+.v2-secao > header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 4px 16px;
+}
+
+.v2-secao h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.v2-secao-alternar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.v2-secao-alternar svg.is-fechada { transform: rotate(-90deg); }
+.v2-secao-acoes { margin-left: auto; }
+.v2-secao-corpo { padding: 0 16px 12px; }
+
+.v2-campos-grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 0;
+}
+
+.v2-campo {
+  min-width: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--v2-linha);
+}
+
+.v2-campo.is-largo { grid-column: 1 / -1; }
+
+.v2-campo-rotulo,
+.v2-campo label {
+  display: flex;
+  align-items: center;
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.v2-campo dd {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 24px;
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.v2-campo-editar {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--v2-texto-2);
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.v2-campo:hover .v2-campo-editar,
+.v2-campo-editar:focus-visible { opacity: 1; background: var(--v2-fundo); color: var(--v2-acento-escuro); }
+
+.v2-campo input,
+.v2-campo select,
+.v2-campo textarea {
+  width: 100%;
+  min-height: 36px;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--v2-borda-forte);
+  border-radius: 6px;
+  background: var(--v2-cartao);
+  color: var(--v2-texto);
+  font: inherit;
+}
+
+.v2-campo [aria-invalid="true"] { border-color: #a3241a; box-shadow: inset 0 0 0 1px #a3241a; }
+
+.v2-campo-erro {
+  margin: 4px 0 0;
+  color: #8f2016;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.v2-formulario-rodape {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--v2-borda);
+  background: var(--v2-cartao);
+}
+
+.v2-formulario-rodape .v2-erro { margin-right: auto; }
+
+/* ---------- kanban ---------- */
+
+.v2-kanban {
+  display: grid;
+  grid-auto-columns: minmax(240px, 1fr);
+  grid-auto-flow: column;
+  gap: 8px;
+  min-height: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.v2-kanban-coluna {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cabeca-tabela);
+}
+
+.v2-kanban-coluna.is-alvo { border-color: var(--v2-acento); background: var(--v2-acento-claro); }
+
+.v2-kanban-coluna > header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-bottom: 3px solid var(--v2-borda);
+}
+
+.v2-kanban-coluna > header.is-info { border-bottom-color: #1f6fb8; }
+.v2-kanban-coluna > header.is-atencao { border-bottom-color: #b26a00; }
+.v2-kanban-coluna > header.is-sucesso { border-bottom-color: #23824a; }
+.v2-kanban-coluna > header.is-perigo { border-bottom-color: #b3271c; }
+
+.v2-kanban-coluna h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.v2-kanban-coluna > header .v2-contador { margin-left: auto; }
+
+.v2-kanban-coluna ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 8px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.v2-kanban-cartao {
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+}
+
+.v2-kanban-cartao[draggable="true"] { cursor: grab; }
+
+.v2-kanban-abrir,
+.v2-kanban-conteudo {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--v2-raio);
+  background: none;
+  color: var(--v2-texto);
+  font: inherit;
+  text-align: left;
+}
+
+.v2-kanban-abrir { cursor: pointer; }
+.v2-kanban-abrir:hover { background: #f9fafa; }
+
+.v2-kanban-mover {
+  display: block;
+  padding: 0 10px 8px;
+}
+
+.v2-kanban-mover select {
+  width: 100%;
+  height: 28px;
+  border: 1px solid var(--v2-borda);
+  border-radius: 6px;
+  background: var(--v2-cartao);
+  color: var(--v2-texto-2);
+  font: inherit;
+  font-size: 12px;
+}
+
+.v2-kanban-vazio {
+  padding: 12px;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+}
+
+/* ---------- indicadores ---------- */
+
+.v2-indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v2-indicador {
+  position: relative;
+  border-top: 3px solid var(--v2-borda);
+}
+
+.v2-indicador.is-info { border-top-color: #1f6fb8; }
+.v2-indicador.is-atencao { border-top-color: #b26a00; }
+.v2-indicador.is-sucesso { border-top-color: #23824a; }
+.v2-indicador.is-perigo { border-top-color: #b3271c; }
+
+.v2-indicador > a,
+.v2-indicador > button,
+.v2-indicador > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--v2-raio);
+  background: none;
+  color: var(--v2-texto);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.v2-indicador > a,
+.v2-indicador > button { cursor: pointer; }
+.v2-indicador > a:hover,
+.v2-indicador > button:hover { background: #f9fafa; }
+
+/* o espaco a direita e do (i); sem (i), o rotulo usa a largura toda */
+.v2-indicador:not(:has(.v2-indicador-dica)) .v2-indicador-rotulo { padding-right: 0; }
+
+.v2-indicador-rotulo {
+  padding-right: 24px;
+  color: var(--v2-texto-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.v2-indicador strong {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-indicador-detalhe {
+  color: var(--v2-texto-2);
+  font-size: 12px;
+}
+
+.v2-indicador-dica {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* ---------- dialogo e gaveta ---------- */
+
+.v2-sobreposicao {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  background: rgb(28 31 35 / 0.4);
+}
+
+.v2-sobreposicao.is-dialogo {
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 16px 16px;
+}
+
+.v2-sobreposicao.is-gaveta { justify-content: flex-end; }
+
+.v2-dialogo,
+.v2-gaveta {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  background: var(--v2-cartao);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.2);
+}
+
+.v2-dialogo {
+  width: min(100%, 520px);
+  border-radius: var(--v2-raio);
+}
+
+.v2-dialogo.is-larga { width: min(100%, 880px); }
+.v2-dialogo.is-estreita { width: min(100%, 400px); }
+
+.v2-gaveta {
+  width: min(100%, 440px);
+  height: 100%;
+}
+
+.v2-gaveta.is-larga { width: min(100%, 640px); }
+.v2-gaveta.is-estreita { width: min(100%, 360px); }
+
+.v2-dialogo > header,
+.v2-gaveta > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--v2-linha);
+}
+
+.v2-dialogo h2,
+.v2-gaveta h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.v2-dialogo-corpo,
+.v2-gaveta-corpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 12px 16px 16px;
+  overflow: auto;
+}
+
+.v2-dialogo > footer,
+.v2-gaveta > footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--v2-linha);
+}
+
+/*
+  TODA CAIXA QUE ROLA E POSICIONADA. O texto so para leitor de tela (`.v2-sr`) e absoluto; dentro de uma caixa que
+  rola SEM posicao, ele escapa do corte e estica a raiz (medido: a raiz da v2 ia a 619 px numa janela de 375 por
+  causa das etapas do path). Com a caixa posicionada, ele fica dentro dela.
+*/
+.v2-conteudo,
+.v2-tabela-rolagem,
+.v2-grade-corpo,
+.v2-segmentado,
+.v2-indicadores.is-faixa,
+.v2-atividade-corpo,
+.v2-painel,
+.v2-caminho ol,
+.v2-modulos,
+.v2-abas-registro,
+.v2-kanban,
+.v2-kanban-coluna ul,
+.v2-dialogo-corpo,
+.v2-gaveta-corpo { position: relative; }
+
+/* ---------- a tela nao rola: elasticos, grade de cartoes, seletor segmentado ---------- */
+
+/*
+  Diretiva do owner (10/10/2026): a pagina nao rola, o conteudo do cartao rola. Dentro de `.v2-pagina.is-inteira`
+  (`PaginaInteira`, `PaginaDeRegistro`) os filhos tem a altura natural e so os ELASTICOS dividem o resto:
+  - `ListView`: encolhe ate caber (`flex: 0 1 auto` — lista curta nao estica cartao vazio); filtros e cabecalho
+    fixos, a tabela rola por dentro com o cabecalho das colunas preso, o rodape fica embaixo.
+  - `GradeDeCartoes`, `Kanban`, o corpo do registro e `.v2-elastico`: ocupam o resto (`flex: 1 1 0`).
+  Todo elastico tem `min-height: 0` (senao o conteudo empurra a pagina) e o que corta tem barra propria.
+*/
+.v2-pagina.is-inteira > .v2-lista {
+  flex: 0 1 auto;
+  min-height: 168px;
+}
+
+.v2-pagina.is-inteira > :is(.v2-grade, .v2-kanban, .v2-registro-corpo, .v2-cadastro-painel, .v2-elastico) {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.v2-lista {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.v2-lista > * { flex: 0 0 auto; }
+
+.v2-lista > .v2-tabela-rolagem {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+/* registro: os dois lados dividem a altura; cada um rola por dentro */
+.v2-registro-principal,
+.v2-registro-lateral {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.v2-registro-principal > :only-child,
+.v2-registro-lateral > :only-child { flex: 1 1 auto; min-height: 0; }
+
+.v2-registro-abas {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.v2-registro-abas > .v2-abas-registro { flex: 0 0 auto; }
+
+.v2-registro-abas > .v2-painel {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.v2-atividade {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.v2-atividade > .v2-subtitulo { flex: 0 0 auto; }
+
+.v2-atividade-corpo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* o kanban: as colunas ocupam a altura e rolam por dentro */
+.v2-kanban { grid-template-rows: minmax(0, 1fr); }
+
+/* a faixa de indicadores: uma linha so; o que nao cabe rola de lado dentro dela */
+.v2-indicadores.is-faixa {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.v2-indicadores.is-faixa > li { flex: 1 0 148px; }
+
+/* o seletor segmentado */
+.v2-segmentado {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.v2-segmentado button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--v2-texto);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.v2-segmentado button:hover { background: var(--v2-fundo); }
+
+.v2-segmentado button[aria-selected="true"] {
+  border-bottom-color: var(--v2-acento);
+  color: var(--v2-acento-escuro);
+  font-weight: 600;
+}
+
+.v2-segmentado .v2-contador { margin-left: 2px; }
+
+/* o seletor do celular (grade e registro): pilula, um cartao por vez */
+.v2-grade-seletor,
+.v2-registro-seletor {
+  flex: 0 0 auto;
+  padding: 3px;
+  border: 1px solid var(--v2-borda);
+  border-radius: var(--v2-raio);
+  background: var(--v2-cartao);
+}
+
+.v2-grade-seletor button,
+.v2-registro-seletor button {
+  flex: 1 0 auto;
+  justify-content: center;
+  border-bottom: 0;
+  border-radius: 6px;
+}
+
+.v2-grade-seletor button[aria-selected="true"],
+.v2-registro-seletor button[aria-selected="true"] {
+  background: var(--v2-acento);
+  color: #ffffff;
+}
+
+/* a grade de cartoes */
+.v2-grade {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+/* os seletores "um por vez" so existem no celular (ate 900 px) */
+.v2-segmentado:is(.v2-grade-seletor, .v2-registro-seletor) { display: none; }
+
+.v2-grade-cartoes {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-areas: var(--v2-grade-areas, none);
+  grid-template-columns: var(--v2-grade-colunas, repeat(auto-fit, minmax(320px, 1fr)));
+  grid-template-rows: var(--v2-grade-linhas, minmax(0, 1fr));
+  gap: 12px;
+  min-height: 0;
+}
+
+.v2-grade-cartao {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.v2-grade-cabecalho {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--v2-linha);
+}
+
+.v2-grade-cabecalho h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.v2-grade-abas { flex: 0 1 auto; margin-left: -10px; }
+.v2-grade-cabecalho.is-titulado h2 { flex: 0 0 auto; margin-right: 8px; }
+.v2-grade-cabecalho.is-titulado .v2-grade-abas { min-width: 0; margin-left: 0; }
+.v2-grade-abas button { min-height: 39px; }
+
+.v2-grade-ferramentas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: var(--v2-texto-2);
+  font-size: 13px;
+}
+
+.v2-grade-corpo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.v2-grade-corpo:focus-visible { outline-offset: -2px; }
+
+/* o cartao `proprio` (ListView na grade): sem casca; o cartao de dentro ocupa a altura e a tabela rola por dentro */
+.v2-grade-cartao.is-proprio > * { flex: 1 1 auto; min-height: 0; }
+
+.v2-grade-rodape {
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border-top: 1px solid var(--v2-linha);
+}
+
+@media (pointer: coarse) {
+  .v2-segmentado button { min-height: 44px; }
+}
+
+@media (max-width: 1180px) {
+  /* a lateral do registro desce: os dois dividem a altura */
+  .v2-registro-corpo:not(.is-sem-lateral) { grid-template-rows: minmax(0, 1fr) minmax(0, 0.7fr); }
+}
+
+@media (max-width: 900px) {
+  /* UM CARTAO POR VEZ: o seletor troca qual cartao ocupa a tela */
+  .v2-segmentado:is(.v2-grade-seletor, .v2-registro-seletor) { display: flex; }
+
+  .v2-grade-cartoes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .v2-grade-cartao:not(.is-ativo) { display: none; }
+  .v2-grade-cartao.is-ativo { flex: 1 1 0; }
+
+  .v2-registro-corpo:not(.is-sem-lateral) { grid-template-rows: minmax(0, 1fr); }
+  .v2-registro-corpo.is-celular-principal > .v2-registro-lateral,
+  .v2-registro-corpo.is-celular-lateral > .v2-registro-principal { display: none; }
+}
+
+/* ---------- movimento ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .v2-botao,
+  .v2-modulos a,
+  .v2-tabela tbody tr,
+  .v2-kanban-abrir,
+  .v2-indicador > a,
+  .v2-indicador > button { transition: background-color 150ms ease; }
+
+  .v2-sobreposicao.is-gaveta .v2-gaveta { animation: v2-gaveta-entra 200ms ease-out; }
+  .v2-secao-alternar svg { transition: transform 150ms ease; }
+}
+
+@keyframes v2-gaveta-entra {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* ---------- toque ---------- */
+
+@media (pointer: coarse) {
+  .v2-botao,
+  .v2-botao-icone,
+  .v2-campo-editar,
+  .v2-kanban-mover select,
+  .v2-abas-registro button,
+  .v2-ordenar { min-height: 44px; }
+
+  .v2-botao-icone,
+  .v2-campo-editar { min-width: 44px; }
+}
+
+/* ---------- larguras (componentes) ---------- */
+
+@media (max-width: 1180px) {
+  .v2-registro-corpo { grid-template-columns: minmax(0, 1fr); }
+  .v2-campos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .v2-destaque-topo { flex-wrap: wrap; }
+  .v2-destaque-titulo { flex-basis: calc(100% - 52px); }
+  .v2-destaque-titulo h1 { white-space: normal; }
+  .v2-acoes { align-items: stretch; width: 100%; }
+  .v2-campos dd { white-space: normal; overflow-wrap: anywhere; }
+  .v2-grupo-botoes { justify-content: flex-start; }
+
+  .v2-lista-cabecalho { flex-wrap: wrap; }
+  .v2-lista-identidade { flex: 1 1 0; }
+  /* Com o seletor de vista, a identidade nao encolhe abaixo do nome da vista: na Equipe a 390 as ferramentas cabiam
+     na mesma linha e o seletor virou so a seta (bateria de 12/10). Sem largura, as ferramentas descem para a linha de baixo. */
+  .v2-lista-identidade:not(.is-sem-vista) { min-width: 144px; }
+  .v2-lista-busca input { width: 140px; }
+  /* Em blocos a densidade nao muda nada: o botao sai em vez de enganar. */
+  .v2-lista.is-celular-cartoes .v2-densidade { display: none; }
+  .v2-lista-contagem { width: 100%; margin-left: 0; text-align: left; white-space: normal; }
+
+  .v2-detalhes,
+  .v2-campos-grade { grid-template-columns: minmax(0, 1fr); }
+
+  .v2-sobreposicao.is-dialogo { padding: 16px 8px 8px; }
+
+  /* `is-cartoes`: a tabela vira lista de blocos — um registro por bloco, rotulo ao lado do valor. Nada rola de lado. */
+  .v2-tabela.is-cartoes thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .v2-tabela.is-cartoes,
+  .v2-tabela.is-cartoes tbody { display: block; }
+
+  .v2-tabela.is-cartoes tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--v2-linha);
+  }
+
+  .v2-tabela.is-cartoes td,
+  .v2-tabela.is-cartoes td:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    height: auto;
+    max-width: none;
+    padding: 2px 0;
+    border: 0;
+    text-align: left;
+    /* Valor longo quebra linha em vez de espremer o rotulo ("les sem oportunidade hoje", bateria de 12/10). */
+    white-space: normal;
+  }
+
+  .v2-tabela.is-cartoes td::before {
+    content: attr(data-rotulo);
+    flex: 0 0 auto;
+    color: var(--v2-texto-2);
+    font-size: 12px;
+  }
+
+  .v2-tabela.is-cartoes td.is-titulo {
+    grid-column: 1 / -1;
+    display: block;
+    white-space: normal;
+  }
+
+  .v2-tabela.is-cartoes td.is-titulo::before { content: none; }
+  .v2-tabela.is-cartoes .is-num { text-align: left; }
+}
+
+/*
+  O DESTAQUE COMPACTO NO CELULAR (recomendacao da bateria de 12/10, aceita pelo owner). Em 390x844 o Destaque da oferta
+  ocupava ~2/3 da altura e as abas ficavam com ~170 px. Mudanca minima no kit, vale para toda pagina de registro: o
+  icone sai (o tipo continua escrito ao lado do codigo), o titulo e cada valor ficam em UMA linha (o `title` do h1 e o
+  do valor — `Destaque` poe o texto inteiro quando o valor e texto — dizem o resto) e os campos vao em tres colunas,
+  rotulo pequeno sobre o valor. A trava e2e mede: o Destaque nao passa de
+  1/3 da altura do celular (`v2-tela-nao-rola.spec.ts`).
+*/
+@media (max-width: 520px) {
+  .v2-destaque { padding: 8px 12px; }
+  .v2-destaque-topo { gap: 8px; }
+  .v2-destaque-topo .v2-icone-objeto { display: none; }
+  .v2-destaque-titulo { flex-basis: 100%; }
+  .v2-destaque-titulo h1 { font-size: 17px; white-space: nowrap; }
+  .v2-campos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 8px; margin-top: 8px; padding-top: 8px; }
+  .v2-campos dt { font-size: 11px; }
+  .v2-campos dd { margin-top: 0; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+}

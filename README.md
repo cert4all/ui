@@ -1,6 +1,7 @@
 # @cert4all/ui
 
-Componentes React compartilhados do portfólio Cert4All — hoje só o "shell"
+Componentes React compartilhados do portfólio Cert4All: o **kit da v2**
+(as cinco famílias de tela, `@cert4all/ui/kit`; guia em `src/kit/LEIA-ME.md`) e o "shell"
 visual da tela de login (cartão com identidade de marca: barra de cor,
 logo/iniciais, título, tagline, rodapé). Extraído do `TenantLogin.tsx` do
 Cert4all em 2026-07-26.
