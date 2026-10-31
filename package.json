@@ -23,7 +23,11 @@
     ".": "./src/index.ts",
     "./shell.css": "./src/shell.css",
     "./kit": "./src/kit/index.ts",
-    "./kit.css": "./src/kit.css"
+    "./kit.css": "./src/kit.css",
+    "./kit/base.css": "./src/kit/base.css",
+    "./kit/kit.css": "./src/kit/kit.css",
+    "./kit/familias.css": "./src/kit/familias.css",
+    "./kit/moldura.css": "./src/kit/moldura.css"
   },
   "scripts": {
     "test": "vitest run"

@@ -22,6 +22,10 @@ import "@cert4all/ui/kit.css";
 - **Tokens**: `--v2-*` em `base.css`. O produto troca os que quiser na própria raiz (`.v2 { --v2-acento: … }`). A
   fonte (IBM Plex) também é do produto.
 - **Dependências**: `react`, `react-dom` e `lucide-react` vêm do produto.
+- **Moldura própria**: `kit.css` traz a `moldura.css`, com as mesmas classes (`.v2-cabecalho`, `.v2-modulos`…) que
+  um produto com moldura própria já usa. Esse produto importa as folhas uma a uma, na ordem:
+  `@cert4all/ui/kit/base.css`, a moldura dele, `@cert4all/ui/kit/kit.css` e `@cert4all/ui/kit/familias.css` (é o
+  que o Stonen faz).
 
 ## Mudar o kit
 
