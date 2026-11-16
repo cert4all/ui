@@ -60,8 +60,22 @@ Outros repositórios do portfólio (Íris, Togue, Huga, Elara…) não usam o `P
 O Lançador, o Projeto e o Hoje não foram abertos no navegador: o "não" deles vem da leitura das folhas. Depois da correção
 todos ficam protegidos de qualquer forma.
 
-## Próximo passo (de quem publicar o kit)
+## Publicação (15/11; owner: "junta o PR e publica o kit", "Sim, nos quatro", "100% autorizado até ir pra producao")
 
-- Atualizar o `@cert4all/ui` nos produtos e rodar a trava "a tela não rola" do Stonen e do Cert4All (`src/kit/LEIA-ME.md`).
-- Na Daphnis, opcional: com o kit novo o Portfólio pode voltar a `href: "/custos"` (com `aoAbrir` junto, para navegar sem
-  recarregar). Assim o cartão vira um link de verdade (abre em outra aba, copia o endereço).
+- cert4all/ui#1 juntado: `main` em `6f78b21`. Sem registro nem tag: os produtos instalam por `github:cert4all/ui` (o Stonen
+  por `.tgz` em `vendor/`).
+
+| Produto | Kit | PR | No ar |
+|---|---|---|---|
+| Daphnis | `c9d2974` → `6f78b21`; o Portfólio volta a `href: "/custos"` (com `aoAbrir`) | cert4all/daphnis#173 | Hermes, release `20261116T023926Z` (`daphnis atualizar --do-codigo`, check 1522) |
+| Cert4All | `372fa7d` → `6f78b21` | cert4all/cert4all#28 | release `20261116T023106Z` (trava ok); retorno `ssh vps-deploy voltar cert4all 20261115T220811Z` |
+| Hugi | `c9d2974` → `6f78b21` (`web/ui`) | cert4all/hugi#7 | release `20261116T022509Z` (trava 141/0); retorno `ssh vps-deploy hugi-deploy 20261115T140029Z <quem> 20261116T022509Z` |
+| Stonen | `b079c76` → `6f78b21` (novo `.tgz`; traz também as mudanças do kit desde `b079c76`) | promovido, main `0611f628` | homolog `20261116T025227Z`, prod `20261116T025412Z`, demo `20261116T025602Z`; volta de prod `ssh vps-deploy voltar stonen 20261115T144651Z` |
+
+Os detalhes de cada um estão no handoff `20261115-kit-indicador-href` (Daphnis, Cert4All, Hugi) e `20261115-kit-6f78b21`
+(Stonen) de cada repositório.
+
+## Para a próxima mudança do kit
+
+- O `npm pack` deste repositório leva `.ai-shared/` para dentro do pacote (não há `files` no `package.json`). Inofensivo, mas
+  vale um `files` com `src/` quando alguém mexer no empacotamento.
