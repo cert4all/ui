@@ -967,11 +967,21 @@
 .v2-indicador.is-sucesso { border-top-color: #23824a; }
 .v2-indicador.is-perigo { border-top-color: #b3271c; }
 
-.v2-indicador > a,
-.v2-indicador > button,
-.v2-indicador > div {
+/*
+  A PORTA DO NUMERO (15/11, Portfolio da Daphnis): o cartao com `href` e um `<a>`, e o produto costuma ter regra para
+  `a` dentro de um contexto seu (`.daphnis-faixa a { display: inline-flex; height: 38px; align-items: center }`, das
+  abas de secao). Com `.v2-indicador > a` (0,1,1) a regra do produto empatava e vencia por vir depois: o cartao ficava
+  com 38 px, o rotulo centralizado e o valor (que corta com `overflow: hidden`) com altura zero. Com a lista na frente
+  (0,2,1) o cartao vence a regra de contexto do produto, e o `<a>` declara tudo o que o `<button>` ja traz de casa.
+*/
+.v2-indicadores > .v2-indicador > a,
+.v2-indicadores > .v2-indicador > button,
+.v2-indicadores > .v2-indicador > div {
   display: flex;
+  flex: none;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   gap: 2px;
   width: 100%;
   height: 100%;
@@ -983,12 +993,13 @@
   font: inherit;
   text-align: left;
   text-decoration: none;
+  white-space: normal;
 }
 
-.v2-indicador > a,
-.v2-indicador > button { cursor: pointer; }
-.v2-indicador > a:hover,
-.v2-indicador > button:hover { background: #f9fafa; }
+.v2-indicadores > .v2-indicador > a,
+.v2-indicadores > .v2-indicador > button { cursor: pointer; }
+.v2-indicadores > .v2-indicador > a:hover,
+.v2-indicadores > .v2-indicador > button:hover { background: #f9fafa; color: var(--v2-texto); }
 
 /* o espaco a direita e do (i); sem (i), o rotulo usa a largura toda */
 .v2-indicador:not(:has(.v2-indicador-dica)) .v2-indicador-rotulo { padding-right: 0; }
