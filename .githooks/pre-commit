@@ -29,3 +29,21 @@ if [[ -x "$REPO_ROOT/scripts/check-ai-coordination.sh" ]]; then
     exit 1
   fi
 fi
+
+# LICENCA (C43, 18/11): o kit e' publico para os produtos instalarem, mas e' proprietario.
+# Prova: scripts/testar-check-licenca.sh. Contrato: 0 passou, 3 reprovou, outro = o guarda nao rodou.
+if [[ -x "$REPO_ROOT/scripts/check-licenca.sh" ]]; then
+  if saida_lic="$("$REPO_ROOT/scripts/check-licenca.sh" 2>&1)"; then
+    printf '%s\n' "$saida_lic"
+  else
+    codigo_lic=$?
+    printf '%s\n' "$saida_lic"
+    echo
+    if [[ "$codigo_lic" -eq 3 ]]; then
+      echo "Commit bloqueado: o repositorio deixaria de se declarar proprietario (licenca, ver acima)."
+    else
+      echo "Commit bloqueado: o guarda scripts/check-licenca.sh nao conseguiu RODAR (exit $codigo_lic). Isto NAO e' reprovacao do seu trabalho."
+    fi
+    exit 1
+  fi
+fi
